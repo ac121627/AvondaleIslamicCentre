@@ -7,23 +7,23 @@ namespace AvondaleIslamicCentre.Models
 {
     public class Booking
     {
-        [Key] public int BookingId { get; set; }
+        [Key] public int BookingId { get; set; } 
 
         [Required]
-        public DateTime StartDateTime { get; set; }
+        public DateTime StartDateTime { get; set; } = DateTime.Now;
 
         [Required]
-        public DateTime EndDateTime { get; set; }
+        public DateTime EndDateTime { get; set; } = DateTime.Now.AddHours(1);
 
         [Required]
         [ForeignKey("HallId")]
-        public int HallId { get; set; }
-        public Hall Hall { get; set; }
+        public int HallId { get; set; } = 0; // Default value to ensure it is not null
+        public Hall Hall { get; set; } = new Hall(); // Navigation property to Hall
 
         [Required]
-        public string AICUserId { get; set; }  
+        public string AICUserId { get; set; } = string.Empty; // Default value to ensure it is not null
         [ForeignKey("AICUserId")]
-        public AICUser AICUser { get; set; }
+        public AICUser AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
 
     }
 }
