@@ -25,16 +25,17 @@ namespace AvondaleIslamicCentre.Models
 
         public string Description { get; set; } = string.Empty; // Description of the report
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Automatically set to current time when created
+        public DateTime CreatedAt { get; set; } = DateTime.Now; // Automatically set to current time when created
 
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Automatically set to current time when created
+        public DateTime UpdatedAt { get; set; } = DateTime.Now; // Automatically set to current time when created
 
         public string CreatedBy { get; set; } = string.Empty;
 
-        public string UpdatedBy { get; set; } = string.Empty; 
+        public string UpdatedBy { get; set; } = string.Empty;
 
-        public string AICUserId { get; set; } // Foreign key to AICUser
+        [Required]
+        public required string AICUserId { get; set; } // Foreign key to AICUser
         [ForeignKey("AICUserId")]
-        public AICUser AICUser { get; set; } // Navigation property to AICUser
+        public required AICUser AICUser { get; set; } // Navigation property to AICUser
     } 
 }

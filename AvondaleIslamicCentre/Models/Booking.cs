@@ -13,7 +13,7 @@ namespace AvondaleIslamicCentre.Models
         public DateTime StartDateTime { get; set; } = DateTime.Now;
 
         [Required]
-        public DateTime EndDateTime { get; set; } = DateTime.Now.AddHours(1);
+        public DateTime EndDateTime { get; set; } = DateTime.Now;
 
         [Required]
         [ForeignKey("HallId")]

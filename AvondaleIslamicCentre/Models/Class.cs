@@ -21,7 +21,7 @@ namespace AvondaleIslamicCentre.Models
         public Teacher Teacher { get; set; } // Navigation property to Teacher
 
         [Required]
-        public int studentId { get; set; } // Foreign key to Student
+        public int StudentId { get; set; } // Foreign key to Student
         public Student Student { get; set; } // Navigation property to Student
         public ICollection<Student> Students { get; set; } = new List<Student>(); // Navigation property to multiple Students
     }
