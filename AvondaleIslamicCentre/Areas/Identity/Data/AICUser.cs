@@ -30,4 +30,3 @@ public class AICUser : IdentityUser
 
     public ICollection<Booking> Booking { get; set; } = new List<Booking>(); // Navigation property to Booking
 }
-
