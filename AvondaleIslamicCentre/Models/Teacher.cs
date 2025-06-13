@@ -19,7 +19,11 @@ namespace AvondaleIslamicCentre.Models
         [Required, Phone]
         public string PhoneNumber { get; set; } = string.Empty; // Phone number of the teacher
 
-
         public ICollection<Class> Classes { get; set; } = new List<Class>();// Navigation property to Class   
+
+        [Required]
+        public int StudentId { get; set; } // Foreign key to Student
+        public Student? Student { get; set; } // Navigation property to Student
+        public ICollection<Student> Students { get; set; } = new List<Student>(); // Navigation property to multiple Students
     }
 }

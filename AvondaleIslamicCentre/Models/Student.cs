@@ -46,5 +46,9 @@ namespace AvondaleIslamicCentre.Models
 
         public int ClassId { get; set; }
         public Class? Class { get; set; } // Navigation property to Class
+
+        [Required]
+        public int TeacherId { get; set; } // Foreign key to Teacher
+        public Teacher? Teacher { get; set; } // Navigation property to Teacher
     }
 }
