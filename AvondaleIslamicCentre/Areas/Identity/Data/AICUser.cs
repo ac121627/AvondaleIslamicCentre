@@ -29,4 +29,7 @@ public class AICUser : IdentityUser
     public string Phone { get; set; } = string.Empty;
 
     public ICollection<Booking> Booking { get; set; } = new List<Booking>(); // Navigation property to Booking
+
+    // Navigation property to donations
+    public ICollection<Donation> Donations { get; set; } = new List<Donation>();
 }
