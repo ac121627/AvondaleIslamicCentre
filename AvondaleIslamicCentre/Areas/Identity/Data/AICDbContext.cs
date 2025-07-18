@@ -20,6 +20,7 @@ public class AICDbContext : IdentityDbContext<AICUser>
         For example, you can rename the ASP.NET Identity table names and more.
         Add your customizations after calling base.OnModelCreating(builder); */
     }
+public DbSet<AvondaleIslamicCentre.Models.Donation> Donations { get; set; } = default!;
 
 public DbSet<AvondaleIslamicCentre.Models.Booking> Booking { get; set; } = default!;
 
