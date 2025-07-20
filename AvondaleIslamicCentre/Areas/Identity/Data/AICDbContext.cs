@@ -22,6 +22,8 @@ public class AICDbContext : IdentityDbContext<AICUser>
     }
 public DbSet<AvondaleIslamicCentre.Models.Donation> Donations { get; set; } = default!;
 
+public DbSet<AvondaleIslamicCentre.Models.Notice> Notices { get; set; } = default!;
+
 public DbSet<AvondaleIslamicCentre.Models.Booking> Booking { get; set; } = default!;
 
 public DbSet<AvondaleIslamicCentre.Models.Class> Class { get; set; } = default!;

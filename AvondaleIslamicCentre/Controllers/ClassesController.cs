@@ -45,7 +45,7 @@ namespace AvondaleIslamicCentre.Controllers
         // GET: Classes/Create
         public IActionResult Create()
         {
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "Email");
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName");
             return View();
         }
 
@@ -60,7 +60,7 @@ namespace AvondaleIslamicCentre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "Email", classItem.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", classItem.TeacherId);
             return View(classItem);
         }
 
@@ -74,7 +74,7 @@ namespace AvondaleIslamicCentre.Controllers
             if (classItem == null)
                 return NotFound();
 
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "Email", classItem.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", classItem.TeacherId);
             return View(classItem);
         }
 
@@ -103,7 +103,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "Email", classItem.TeacherId);
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", classItem.TeacherId);
             return View(classItem);
         }
 

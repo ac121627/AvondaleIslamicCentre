@@ -59,7 +59,7 @@ namespace AvondaleIslamicCentre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ReportId,FirstName,LastName,Description,CreatedAt,UpdatedAt,CreatedBy,UpdatedBy,AICUserId")] Report report)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(report);
                 await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

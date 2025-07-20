@@ -61,7 +61,7 @@ namespace AvondaleIslamicCentre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
@@ -102,7 +102,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

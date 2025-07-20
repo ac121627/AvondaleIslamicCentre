@@ -10,23 +10,23 @@ using AvondaleIslamicCentre.Models;
 
 namespace AvondaleIslamicCentre.Controllers
 {
-    public class DonationsController : Controller
+    public class NoticesController : Controller
     {
         private readonly AICDbContext _context;
 
-        public DonationsController(AICDbContext context)
+        public NoticesController(AICDbContext context)
         {
             _context = context;
         }
 
-        // GET: Donations
+        // GET: Notices
         public async Task<IActionResult> Index()
         {
-            var aICDbContext = _context.Donations.Include(d => d.AICUser);
+            var aICDbContext = _context.Notices.Include(n => n.AICUser);
             return View(await aICDbContext.ToListAsync());
         }
 
-        // GET: Donations/Details/5
+        // GET: Notices/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +34,42 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            var donation = await _context.Donations
-                .Include(d => d.AICUser)
-                .FirstOrDefaultAsync(m => m.DonationId == id);
-            if (donation == null)
+            var notice = await _context.Notices
+                .Include(n => n.AICUser)
+                .FirstOrDefaultAsync(m => m.NoticeId == id);
+            if (notice == null)
             {
                 return NotFound();
             }
 
-            return View(donation);
+            return View(notice);
         }
 
-        // GET: Donations/Create
+        // GET: Notices/Create
         public IActionResult Create()
         {
             ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
-        // POST: Donations/Create
+        // POST: Notices/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
+        public async Task<IActionResult> Create([Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
         {
             if (!ModelState.IsValid)
             {
-                _context.Add(donation);
+                _context.Add(notice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", donation.AICUserId);
-            return View(donation);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
+            return View(notice);
         }
 
-        // GET: Donations/Edit/5
+        // GET: Notices/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +77,23 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            var donation = await _context.Donations.FindAsync(id);
-            if (donation == null)
+            var notice = await _context.Notices.FindAsync(id);
+            if (notice == null)
             {
                 return NotFound();
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", donation.AICUserId);
-            return View(donation);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
+            return View(notice);
         }
 
-        // POST: Donations/Edit/5
+        // POST: Notices/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
+        public async Task<IActionResult> Edit(int id, [Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
         {
-            if (id != donation.DonationId)
+            if (id != notice.NoticeId)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace AvondaleIslamicCentre.Controllers
             {
                 try
                 {
-                    _context.Update(donation);
+                    _context.Update(notice);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DonationExists(donation.DonationId))
+                    if (!NoticeExists(notice.NoticeId))
                     {
                         return NotFound();
                     }
@@ -118,11 +118,11 @@ namespace AvondaleIslamicCentre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", donation.AICUserId);
-            return View(donation);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
+            return View(notice);
         }
 
-        // GET: Donations/Delete/5
+        // GET: Notices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,35 +130,35 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            var donation = await _context.Donations
-                .Include(d => d.AICUser)
-                .FirstOrDefaultAsync(m => m.DonationId == id);
-            if (donation == null)
+            var notice = await _context.Notices
+                .Include(n => n.AICUser)
+                .FirstOrDefaultAsync(m => m.NoticeId == id);
+            if (notice == null)
             {
                 return NotFound();
             }
 
-            return View(donation);
+            return View(notice);
         }
 
-        // POST: Donations/Delete/5
+        // POST: Notices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var donation = await _context.Donations.FindAsync(id);
-            if (donation != null)
+            var notice = await _context.Notices.FindAsync(id);
+            if (notice != null)
             {
-                _context.Donations.Remove(donation);
+                _context.Notices.Remove(notice);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DonationExists(int id)
+        private bool NoticeExists(int id)
         {
-            return _context.Donations.Any(e => e.DonationId == id);
+            return _context.Notices.Any(e => e.NoticeId == id);
         }
     }
 }
