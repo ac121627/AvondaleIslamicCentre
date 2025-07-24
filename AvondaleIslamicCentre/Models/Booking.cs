@@ -9,10 +9,11 @@ namespace AvondaleIslamicCentre.Models
     {
         [Key] public int BookingId { get; set; } 
 
-        [Required]
+        [Required, Display(Name = "Start Date and Time")]
         public DateTime StartDateTime { get; set; } = DateTime.Now;
 
         [Required]
+        [Display(Name = "End Date and Time")]
         public DateTime EndDateTime { get; set; } = DateTime.Now;
 
         [Required]

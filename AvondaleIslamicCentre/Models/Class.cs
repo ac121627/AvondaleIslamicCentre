@@ -10,12 +10,15 @@ namespace AvondaleIslamicCentre.Models
         public int ClassId { get; set; } // Primary key with default value
 
         [Required, StringLength(20)]
+        [Display(Name = "Class Name")]
         public string ClassName { get; set; } = string.Empty; // Class name with default value
 
         [Required, StringLength(100)]
+        [Display(Name = "Class Description")]
         public string Description { get; set; } = string.Empty; // Class description
 
         [Required]
+        [Display(Name = "Start Date")]
         public int CurrentStudents { get; set; } // Current number of students in the class    
 
         [Required]
