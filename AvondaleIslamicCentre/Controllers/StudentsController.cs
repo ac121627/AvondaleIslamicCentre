@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AvondaleIslamicCentre.Areas.Identity.Data;
 using AvondaleIslamicCentre.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AvondaleIslamicCentre.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private readonly AICDbContext _context;
