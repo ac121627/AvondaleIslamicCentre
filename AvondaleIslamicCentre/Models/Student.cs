@@ -1,28 +1,52 @@
 ﻿using AvondaleIslamicCentre.Areas.Identity.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace AvondaleIslamicCentre.Models
 {
     public class Student
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Display(Name = "Student ID")]
         public int StudentId { get; set; }
 
-        [Required, StringLength(50), Display(Name = "Guardian First Name")]
+        [StringLength(50), Display(Name = "Guardian First Name")]
+        [Required(ErrorMessage = "Please enter Guardian First Name")]
+        [MinLength(2)]
+        [MaxLength(50)]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string GuardianFirstName { get; set; } = string.Empty; // First name of the guardian
 
-        [Required, StringLength(50), Display(Name = "Guardian Last Name")]
-
+        [StringLength(50), Display(Name = "Guardian Last Name")]
+        [Required(ErrorMessage = "Please enter Guardian Last Name")]
+        [MinLength(2)]
+        [MaxLength(50)]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string GuardianLastName { get; set; } = string.Empty; // Last name of the guardian
 
-        [Required, StringLength(50), Display(Name = "First Name")]
+        [StringLength(50), Display(Name = "First Name")]
+        [Required(ErrorMessage = "Please enter Student First Name")]
+        [MinLength(3)]
+        [MaxLength(25)]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string FirstName { get; set; } = string.Empty; // First name of the student
 
-        [Required, StringLength(50), Display(Name = "Last Name")]
+        [StringLength(50), Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Please enter Student Last Name")]
+        [MinLength(3)]
+        [MaxLength(25)]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string LastName { get; set; } = string.Empty; // Last name of the student
 
-        [Required, EmailAddress, Display(Name = "Email Address")]
+        [Required(ErrorMessage = "Please enter an email address")]
+        [MaxLength(50)]
+        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Please enter a valid email address.")]
+        [EmailAddress]
+        [Display(Name = "Email")]
         public string Email { get; set; } = string.Empty; // Email address of the student
 
         [Required, Phone, Display(Name = "Phone Number")]
@@ -40,7 +64,9 @@ namespace AvondaleIslamicCentre.Models
         [Required, StringLength(20), Display(Name = "Quran Hifz")]
         public string QuranHifz { get; set; } = string.Empty; // Quran Hifz level of the student
 
-        [Required, DataType(DataType.Date), Display(Name = "Date of Birth")]
+        [Required]
+        [DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
         public DateTime DateOfBirth { get; set; }
 
         [Required, StringLength(100)]

@@ -13,8 +13,8 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Hall Name")]
         public string Name { get; set; } = string.Empty; // Name of the hall
 
-        [Required(ErrorMessage = ".")] //Capacity field that indicates how many animals may fit inside the enclosure.
-        [Range(1, 200)]
+        [Required(ErrorMessage = ".")] 
+        [Range(10, 200)]
         [Display(Name = "Capacity")]
         public int Capacity { get; set; } // Maximum number of people the hall can accommodate
 

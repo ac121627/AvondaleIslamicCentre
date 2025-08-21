@@ -7,6 +7,7 @@ namespace AvondaleIslamicCentre.Models
     public class Class
     {
         [Key]
+        [Display(Name = "Class ID")]
         public int ClassId { get; set; } // Primary key with default value
 
         [Required, StringLength(20)]
