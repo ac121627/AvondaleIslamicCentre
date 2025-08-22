@@ -6,6 +6,10 @@ using System.Numerics;
 
 namespace AvondaleIslamicCentre.Models
 {
+    public enum Gender
+    {
+        Male, Female
+    }
     public class Student
     {
         [Key]
@@ -50,9 +54,12 @@ namespace AvondaleIslamicCentre.Models
         public string Email { get; set; } = string.Empty; // Email address of the student
 
         [Required, Phone, Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber), MaxLength(17)]
+        [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
+               ErrorMessage = "Phone Number is not valid.")]
         public string PhoneNumber { get; set; } = string.Empty; // Phone number of the student
 
-        [Required, StringLength(10)]
+        [Required, StringLength(10), Display(Name ="Gender")]
         public string Gender { get; set; } = string.Empty; // Gender of the student
 
         [Required, StringLength(10)]
@@ -64,8 +71,11 @@ namespace AvondaleIslamicCentre.Models
         [Required, StringLength(20), Display(Name = "Quran Hifz")]
         public string QuranHifz { get; set; } = string.Empty; // Quran Hifz level of the student
 
-        [Required]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$", ErrorMessage = "Date of Birth must be in the format dd/MM/yyyy.")]
+        [Required(ErrorMessage = "Please enter Date of Birth")]
+        [Column(TypeName = "date")]
         [Display(Name = "Date of Birth")]
         public DateTime DateOfBirth { get; set; }
 

@@ -10,16 +10,19 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Class ID")]
         public int ClassId { get; set; } // Primary key with default value
 
-        [Required, StringLength(20)]
+        [Required(ErrorMessage = "Please enter a class name.")]
+        [StringLength(20, ErrorMessage = "Class name cannot exceed 20 characters.")]
         [Display(Name = "Class Name")]
         public string ClassName { get; set; } = string.Empty; // Class name with default value
 
-        [Required, StringLength(100)]
+        [Required(ErrorMessage = "Please enter a class description.")]
+        [StringLength(100, ErrorMessage = "Description cannot exceed 100 characters.")]
         [Display(Name = "Class Description")]
         public string Description { get; set; } = string.Empty; // Class description
 
-        [Required]
-        [Display(Name = "Start Date")]
+        [Required(ErrorMessage = "Please enter the number of current students.")]
+        [Range(0, 1000, ErrorMessage = "Current students must be between 0 and 1000.")]
+        [Display(Name = "Current Students")]
         public int CurrentStudents { get; set; } // Current number of students in the class    
 
         [Required]

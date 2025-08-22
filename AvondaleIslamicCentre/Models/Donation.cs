@@ -17,21 +17,22 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Display(Name = "Date Donated")]
+        [DateWithinRange(MaxDaysAhead = 28, ErrorMessage = "Date donated must be today or within 4 weeks ahead.")]
         public DateTime DateDonated { get; set; } = DateTime.Now;
 
-        [MaxLength(100)]
+        [MaxLength(100, ErrorMessage = "Donor name cannot exceed 100 characters.")]
         [Display(Name = "Donor Name")]
         public string? DonorName { get; set; }  // Optional for anonymous donations
 
-        [Required, MaxLength(100)]
+        [Required, MaxLength(100, ErrorMessage = "Donation type cannot exceed 100 characters.")]
         [Display(Name = "Donation Type")]
         public string? DonationType { get; set; } // e.g. Zakat, Sadaqah, General, Building Fund
 
-        [Required, MaxLength(50)]
+        [Required, MaxLength(50, ErrorMessage = "Payment method cannot exceed 50 characters.")]
         [Display(Name = "Payment Method")]
         public string? PaymentMethod { get; set; } // e.g. Cash, Credit Card, Bank Transfer
 
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
         [Display(Name = "Description")]
         public string? Description { get; set; } // For admin or donor comments
 
