@@ -10,19 +10,16 @@ namespace AvondaleIslamicCentre.Models
         [Key]
         public int NoticeId { get; set; } // Unique ID for the notice
 
-        [Required(ErrorMessage = "Please enter a title.")]
-        [StringLength(100, ErrorMessage = "Title cannot exceed 100 characters.")]
+        [Required, StringLength(100)]
         [Display(Name = "Notice Title")]
         public string Title { get; set; } = string.Empty; // Title of the notice
 
-        [Required(ErrorMessage = "Please enter a message.")]
-        [StringLength(1000, ErrorMessage = "Message cannot exceed 1000 characters.")]
+        [Required, StringLength(1000)]
         [Display(Name = "Notice Message")]
         public string Message { get; set; } = string.Empty; // Full content of the notice
 
         [Required]
         [Display(Name = "Posted At")]
-        [DateWithinRange(MaxDaysAhead = 28, ErrorMessage = "Posted date must be today or within 4 weeks ahead.")]
         public DateTime PostedAt { get; set; } = DateTime.Now; // When the notice was posted
 
         [Display(Name = "Updated At")]

@@ -54,9 +54,7 @@ namespace AvondaleIslamicCentre.Models
         public string Email { get; set; } = string.Empty; // Email address of the student
 
         [Required, Phone, Display(Name = "Phone Number")]
-        [DataType(DataType.PhoneNumber), MaxLength(17)]
-        [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
-               ErrorMessage = "Phone Number is not valid.")]
+        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; } = string.Empty; // Phone number of the student
 
         [Required, StringLength(10), Display(Name ="Gender")]
@@ -77,6 +75,7 @@ namespace AvondaleIslamicCentre.Models
         [Required(ErrorMessage = "Please enter Date of Birth")]
         [Column(TypeName = "date")]
         [Display(Name = "Date of Birth")]
+        [DOBValidator(ErrorMessage = "Date of Birth cannot be in the future and age must be less than 100 years.")]
         public DateTime DateOfBirth { get; set; }
 
         [Required, StringLength(100)]

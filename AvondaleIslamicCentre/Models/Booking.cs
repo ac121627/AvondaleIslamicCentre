@@ -10,12 +10,10 @@ namespace AvondaleIslamicCentre.Models
         [Key] public int BookingId { get; set; } 
 
         [Required, Display(Name = "Start Date and Time")]
-        [DateWithinRange(MaxDaysAhead = 28, ErrorMessage = "Start date must be today or within 4 weeks ahead.")]
         public DateTime StartDateTime { get; set; } = DateTime.Now;
 
         [Required]
         [Display(Name = "End Date and Time")]
-        [DateWithinRange(MaxDaysAhead = 28, ErrorMessage = "End date must be today or within 4 weeks ahead.")]
         public DateTime EndDateTime { get; set; } = DateTime.Now;
 
         [Required]
@@ -28,4 +26,4 @@ namespace AvondaleIslamicCentre.Models
         [ForeignKey("AICUserId")]
         public AICUser AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
     }
-}
+} 
