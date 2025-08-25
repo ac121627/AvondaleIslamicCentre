@@ -10,17 +10,17 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Class ID")]
         public int ClassId { get; set; } // Primary key with default value
 
-        [Required, StringLength(50)]
-        [Display(Name = "Class Name")]
-        public string ClassName { get; set; } = string.Empty; // Class name with default value
-
-        [Required, StringLength(200)]
-        [Display(Name = "Class Description")]
-        public string Description { get; set; } = string.Empty; // Class description
+        [Required]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Class name must be between 2 and 30 characters.")]
+        public string ClassName { get; set; } = string.Empty; // Name of the class
 
         [Required]
-        [Display(Name = "Start Date")]
-        public int CurrentStudents { get; set; } // Current number of students in the class    
+        [StringLength(1000, MinimumLength = 5, ErrorMessage = "Class description must be between 5 and 1000 characters.")]
+        public string Description { get; set; } = string.Empty; // Description of the class
+
+        [Required]
+        [Range(0, 200, ErrorMessage = "Number of students must be between 0 and 200.")]
+        public int CurrentStudents { get; set; } // Current number of students in the class
 
         [Required]
         public int TeacherId { get; set; } // Foreign key to Teacher

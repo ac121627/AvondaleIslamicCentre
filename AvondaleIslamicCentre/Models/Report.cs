@@ -22,13 +22,13 @@ namespace AvondaleIslamicCentre.Models
         [Column(TypeName = "varchar(100)"), Display(Name = "Last Name")] // Specifies database column type
         public string LastName { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty; // Description of the report
+        [Required]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Title must be between 5 and 100 characters.")]
+        public string Title { get; set; }
 
-        [Required, Display(Name = "Date of Report")]
-        public DateTime CreatedAt { get; set; } = DateTime.Now; // Automatically set to current time when created
-
-        [Display(Name = "Last Updated")]
-        public DateTime UpdatedAt { get; set; } = DateTime.Now; // Automatically set to current time when created
+        [Required]
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Message must be between 10 and 1000 characters.")]
+        public string Message { get; set; }
 
         [Required, StringLength(50), Display(Name = "Created By")]
         public string CreatedBy { get; set; } = string.Empty;

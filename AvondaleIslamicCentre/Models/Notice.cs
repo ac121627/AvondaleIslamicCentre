@@ -9,15 +9,13 @@ namespace AvondaleIslamicCentre.Models
     {
         [Key]
         public int NoticeId { get; set; } // Unique ID for the notice
-
-        [Required, StringLength(100)]
-        [Display(Name = "Notice Title")]
+        [Required]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Title must be between 5 and 100 characters.")]
         public string Title { get; set; } = string.Empty; // Title of the notice
 
-        [Required, StringLength(1000)]
-        [Display(Name = "Notice Message")]
-        public string Message { get; set; } = string.Empty; // Full content of the notice
-
+        [Required]
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Message must be between 10 and 1000 characters.")]
+        public string Message { get; set; } = string.Empty; // Main content of the notice
         [Required]
         [Display(Name = "Posted At")]
         public DateTime PostedAt { get; set; } = DateTime.Now; // When the notice was posted

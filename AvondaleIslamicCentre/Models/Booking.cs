@@ -7,18 +7,22 @@ namespace AvondaleIslamicCentre.Models
 {
     public class Booking
     {
-        [Key] public int BookingId { get; set; } 
-
-        [Required, Display(Name = "Start Date and Time")]
-        public DateTime StartDateTime { get; set; } = DateTime.Now;
+        [Key] public int BookingId { get; set; }
 
         [Required]
-        [Display(Name = "End Date and Time")]
-        public DateTime EndDateTime { get; set; } = DateTime.Now;
+        [Display(Name = "Start Date and Time")]
+        [StartDateTime]
+        public DateTime StartDateTime { get; set; } 
+
+        [Required]
+        [Display(Name = "End Time")]
+        [EndDateTime]
+        public DateTime EndDateTime { get; set; } 
 
         [Required]
         [ForeignKey("HallId")]
-        public int HallId { get; set; } = 0; // Default value to ensure it is not null
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a hall.")]
+        public int HallId { get; set; }
         public Hall Hall { get; set; } = new Hall(); // Navigation property to Hall
 
         [Required]
