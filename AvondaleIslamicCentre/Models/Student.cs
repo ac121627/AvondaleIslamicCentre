@@ -1,7 +1,6 @@
 ﻿using AvondaleIslamicCentre.Areas.Identity.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
 namespace AvondaleIslamicCentre.Models
@@ -46,6 +45,11 @@ namespace AvondaleIslamicCentre.Models
         public string LastName { get; set; } = string.Empty; // Last name of the student
 
         [Required]
+        [EmailAddress]
+        [StringLength(100, ErrorMessage = "Email must be under 100 characters.")]
+        public string Email { get; set; } = string.Empty; // Email of the guardian
+
+        [Required]
         [Phone]
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
@@ -71,6 +75,9 @@ namespace AvondaleIslamicCentre.Models
         [Required]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Address must be 5–100 characters.")]
         public string Address { get; set; } = string.Empty; // Address of the guardian
+
+        [Required]
+        public DateTime DateOfBirth { get; set; } // Date of birth of the student
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Class.")]

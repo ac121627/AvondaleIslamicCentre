@@ -23,12 +23,14 @@ namespace AvondaleIslamicCentre.Models
         public string LastName { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Title must be between 5 and 100 characters.")]
-        public string Title { get; set; }
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 1000 characters.")]
+        public string Description { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Message must be between 10 and 1000 characters.")]
-        public string Message { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        [Required]
+        public DateTime UpdatedAt { get; set; }
 
         [Required, StringLength(50), Display(Name = "Created By")]
         public string CreatedBy { get; set; } = string.Empty;

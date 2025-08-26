@@ -14,6 +14,9 @@ namespace AvondaleIslamicCentre.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "Donation amount must be greater than zero.")]
         public decimal Amount { get; set; }
 
+        [Required]
+        public DateTime DateDonated { get; set; }
+
         [StringLength(100, ErrorMessage = "Donor name must be under 100 characters.")]
         public string? DonorName { get; set; }
 

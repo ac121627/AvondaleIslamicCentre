@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
 
+
 namespace AvondaleIslamicCentre.Models
 {
-    public class Booking
+    public class Booking 
     {
         [Key] public int BookingId { get; set; }
 
@@ -29,5 +30,6 @@ namespace AvondaleIslamicCentre.Models
         public string AICUserId { get; set; } = string.Empty; // Default value to ensure it is not null
         [ForeignKey("AICUserId")]
         public AICUser AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
+
     }
 } 
