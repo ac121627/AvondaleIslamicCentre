@@ -41,6 +41,6 @@ namespace AvondaleIslamicCentre.Models
         [Required]
         public required string AICUserId { get; set; } // Foreign key to AICUser
         [ForeignKey("AICUserId")]
-        public required AICUser AICUser { get; set; } // Navigation property to AICUser
+        public required AICUser? AICUser { get; set; } // Navigation property to AICUser
     } 
 }

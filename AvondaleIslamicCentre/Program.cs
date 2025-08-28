@@ -1,6 +1,7 @@
+using AvondaleIslamicCentre.Areas.Identity.Data;
+using AvondaleIslamicCentre.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AvondaleIslamicCentre.Areas.Identity.Data;
 
 
 
@@ -11,7 +12,6 @@ var connectionString = builder.Configuration.GetConnectionString("AvondaleIslami
 builder.Services.AddDbContext<AICDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<AICUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AICDbContext>();
-
 
 
 // Add services to the container.
@@ -25,6 +25,13 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AICDbContext>();
+    AICDbInitializer.Initialize(context);
 }
 
 app.UseHttpsRedirection();
