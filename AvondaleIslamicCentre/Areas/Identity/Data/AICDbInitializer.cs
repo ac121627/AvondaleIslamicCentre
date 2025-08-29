@@ -1,14 +1,42 @@
 ﻿using AvondaleIslamicCentre.Areas.Identity.Data;
 using AvondaleIslamicCentre.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AvondaleIslamicCentre.Data
 {
     public static class AICDbInitializer
     {
-        public static void Initialize(AICDbContext context)
+        public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
-            context.Database.Migrate(); // ensures DB is created & migrated
+
+            var context = serviceProvider.GetRequiredService<AICDbContext>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<AICUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            context.Database.EnsureCreated();
+
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            
+            var demoUser = await userManager.FindByEmailAsync("demo@aic.com");
+            if (demoUser == null)
+            {
+                demoUser = new AICUser
+                {
+                    UserName = "demo@aic.com",
+                    Email = "demo@aic.com",
+                    EmailConfirmed = true,
+                    FirstName = "Demo",
+                    LastName = "User"
+                };
+
+                await userManager.CreateAsync(demoUser, "Demo@123"); // 👈 password
+                await userManager.AddToRoleAsync(demoUser, "Admin");
+            }
 
             // Ensure database exists
             context.Database.EnsureCreated();
@@ -104,7 +132,7 @@ namespace AvondaleIslamicCentre.Data
                     DonationType = "General",
                     PaymentMethod = "Card",
                     Description = $"Donation {i}",
-                    AICUserId = "demo-user-id" // you’ll replace with actual seeded user later
+                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
                 }).ToList();
 
                 context.Donations.AddRange(donations);
@@ -120,7 +148,7 @@ namespace AvondaleIslamicCentre.Data
                     Message = $"This is notice {i} message.",
                     PostedAt = DateTime.Now.AddDays(-i),
                     UpdatedAt = null,
-                    AICUserId = "demo-user-id"
+                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
                 }).ToList();
 
                 context.Notices.AddRange(notices);
@@ -128,9 +156,9 @@ namespace AvondaleIslamicCentre.Data
             }
 
             // ----- Reports -----
+            // ----- Reports -----
             if (!context.Report.Any())
             {
-                var demoUser = context.Users.FirstOrDefault(u => u.Id == "demo-user-id");
                 var reports = Enumerable.Range(1, 20).Select(i => new Report
                 {
                     FirstName = $"Report{i}",
@@ -140,13 +168,13 @@ namespace AvondaleIslamicCentre.Data
                     UpdatedAt = DateTime.Now,
                     CreatedBy = "System",
                     UpdatedBy = "System",
-                    AICUserId = "demo-user-id",
+                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
                     AICUser = demoUser
                 }).ToList();
 
                 context.Report.AddRange(reports);
-                //context.SaveChanges();
             }
+
 
             // ----- Bookings -----
             if (!context.Booking.Any())
@@ -158,7 +186,7 @@ namespace AvondaleIslamicCentre.Data
                     StartDateTime = DateTime.Now.AddDays(i).Date.AddHours(10),
                     EndDateTime = DateTime.Now.AddDays(i).Date.AddHours(12),
                     HallId = hallIds[i % hallIds.Count],
-                    AICUserId = "demo-user-id"
+                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
                 }).ToList();
 
                 context.Booking.AddRange(bookings);
