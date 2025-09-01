@@ -11,7 +11,9 @@ var connectionString = builder.Configuration.GetConnectionString("AvondaleIslami
 
 builder.Services.AddDbContext<AICDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<AICUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AICDbContext>();
+builder.Services.AddDefaultIdentity<AICUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AICDbContext>();
 
 
 // Add services to the container.
@@ -30,8 +32,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AICDbContext>();
-    AICDbInitializer.Initialize(context);
+    await AICDbInitializer.InitializeAsync(services);
 }
 
 app.UseHttpsRedirection();

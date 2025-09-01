@@ -15,16 +15,20 @@ namespace AvondaleIslamicCentre.Models
         public decimal Amount { get; set; }
 
         [Required]
+        [Display(Name = "Date Donated")]
         public DateTime DateDonated { get; set; }
 
         [StringLength(100, ErrorMessage = "Donor name must be under 100 characters.")]
+        [Display(Name = "Donor Name")]
         public string? DonorName { get; set; }
 
         [Required]
+        [Display(Name = "Donation Type")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Donation type must be 3 to 100 characters.")]
         public string? DonationType { get; set; }
 
         [Required]
+        [Display(Name = "Payment Method")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "Payment method must be 3 to 50 characters.")]
         public string? PaymentMethod { get; set; }
 

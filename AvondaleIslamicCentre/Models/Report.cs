@@ -27,9 +27,11 @@ namespace AvondaleIslamicCentre.Models
         public string Description { get; set; } = string.Empty;
 
         [Required]
+        [Display(Name = "Created At")]
         public DateTime CreatedAt { get; set; }
 
         [Required]
+        [Display(Name = "Updated At")]
         public DateTime UpdatedAt { get; set; }
 
         [Required, StringLength(50), Display(Name = "Created By")]

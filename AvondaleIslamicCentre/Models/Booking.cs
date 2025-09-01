@@ -22,14 +22,13 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [ForeignKey("HallId")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a hall.")]
         public int HallId { get; set; }
-        public Hall Hall { get; set; } = new Hall(); // Navigation property to Hall
+        public Hall? Hall { get; set; } = new Hall(); // Navigation property to Hall
 
         [Required]
         public string AICUserId { get; set; } = string.Empty; // Default value to ensure it is not null
         [ForeignKey("AICUserId")]
-        public AICUser AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
+        public AICUser? AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
 
     }
 } 

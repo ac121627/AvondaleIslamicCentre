@@ -21,7 +21,7 @@ namespace AvondaleIslamicCentre.Data
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
-            
+
             var demoUser = await userManager.FindByEmailAsync("demo@aic.com");
             if (demoUser == null)
             {
@@ -59,7 +59,7 @@ namespace AvondaleIslamicCentre.Data
                 }).ToList();
 
                 context.Hall.AddRange(halls);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             // ----- Teachers -----
@@ -74,7 +74,7 @@ namespace AvondaleIslamicCentre.Data
                 }).ToList();
 
                 context.Teachers.AddRange(teachers);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             // ----- Classes -----
@@ -90,7 +90,7 @@ namespace AvondaleIslamicCentre.Data
                 }).ToList();
 
                 context.Class.AddRange(classes);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             // ----- Students -----
@@ -109,16 +109,16 @@ namespace AvondaleIslamicCentre.Data
                     PhoneNumber = $"+64 22-9876-5{i:D2}",
                     Gender = i % 2 == 0 ? "Male" : "Female",
                     Ethnicity = "Asian",
-                    QuranNazira = "Yes",
-                    QuranHifz = "No",
-                    Address = $"123 Street {i}",
+                    QuranNazira = "2",
+                    QuranHifz = "1",
+                    Address = $"123{i} Street",
                     DateOfBirth = DateTime.Now.AddYears(-10).AddDays(i),
                     ClassId = classIds[i % classIds.Count],
                     TeacherId = teacherIds[i % teacherIds.Count]
                 }).ToList();
 
                 context.Students.AddRange(students);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             // ----- Donations -----
@@ -136,7 +136,7 @@ namespace AvondaleIslamicCentre.Data
                 }).ToList();
 
                 context.Donations.AddRange(donations);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             // ----- Notices -----
@@ -152,10 +152,9 @@ namespace AvondaleIslamicCentre.Data
                 }).ToList();
 
                 context.Notices.AddRange(notices);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
-            // ----- Reports -----
             // ----- Reports -----
             if (!context.Report.Any())
             {
@@ -169,28 +168,30 @@ namespace AvondaleIslamicCentre.Data
                     CreatedBy = "System",
                     UpdatedBy = "System",
                     AICUserId = demoUser.Id,   // using seeded demoUser from earlier
-                    AICUser = demoUser
+                    AICUser = demoUser         // required navigation property
                 }).ToList();
 
                 context.Report.AddRange(reports);
+                context.SaveChanges();
             }
-
 
             // ----- Bookings -----
             if (!context.Booking.Any())
             {
-                var hallIds = context.Hall.Select(h => h.HallId).ToList();
+                var halls = context.Hall.ToList(); 
 
                 var bookings = Enumerable.Range(1, 20).Select(i => new Booking
                 {
                     StartDateTime = DateTime.Now.AddDays(i).Date.AddHours(10),
                     EndDateTime = DateTime.Now.AddDays(i).Date.AddHours(12),
-                    HallId = hallIds[i % hallIds.Count],
-                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
+                    HallId = halls[i % halls.Count].HallId,
+                    Hall = halls[i % halls.Count],   
+                    AICUserId = demoUser.Id,
+                    AICUser = demoUser               
                 }).ToList();
 
                 context.Booking.AddRange(bookings);
-                //context.SaveChanges();
+                context.SaveChanges();
             }
 
             //context.SaveChanges();
