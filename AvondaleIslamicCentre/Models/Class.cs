@@ -12,6 +12,7 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "Class name must be between 2 and 30 characters.")]
+        [Display(Name = "Class Name")]
         public string ClassName { get; set; } = string.Empty; // Name of the class
 
         [Required]
@@ -20,6 +21,7 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Range(0, 200, ErrorMessage = "Number of students must be between 0 and 200.")]
+        [Display(Name = "Current Students")]
         public int CurrentStudents { get; set; } // Current number of students in the class
 
         [Required]

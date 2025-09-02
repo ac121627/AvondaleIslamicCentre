@@ -35,7 +35,7 @@ namespace AvondaleIslamicCentre.Data
                 };
 
                 await userManager.CreateAsync(demoUser, "Demo@123"); // 👈 password
-                await userManager.AddToRoleAsync(demoUser, "Admin");
+                await userManager.AddToRoleAsync(demoUser, "Admin"); 
             }
 
             // Ensure database exists
@@ -132,7 +132,7 @@ namespace AvondaleIslamicCentre.Data
                     DonationType = "General",
                     PaymentMethod = "Card",
                     Description = $"Donation {i}",
-                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
+                    AICUserId = demoUser.Id,   
                 }).ToList();
 
                 context.Donations.AddRange(donations);
@@ -148,7 +148,7 @@ namespace AvondaleIslamicCentre.Data
                     Message = $"This is notice {i} message.",
                     PostedAt = DateTime.Now.AddDays(-i),
                     UpdatedAt = null,
-                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
+                    AICUserId = demoUser.Id,   
                 }).ToList();
 
                 context.Notices.AddRange(notices);
@@ -167,8 +167,8 @@ namespace AvondaleIslamicCentre.Data
                     UpdatedAt = DateTime.Now,
                     CreatedBy = "System",
                     UpdatedBy = "System",
-                    AICUserId = demoUser.Id,   // using seeded demoUser from earlier
-                    AICUser = demoUser         // required navigation property
+                    AICUserId = demoUser.Id,   
+                    AICUser = demoUser         
                 }).ToList();
 
                 context.Report.AddRange(reports);
@@ -176,25 +176,32 @@ namespace AvondaleIslamicCentre.Data
             }
 
             // ----- Bookings -----
-            if (!context.Booking.Any())
+            var bookings = new List<Booking>
             {
-                var halls = context.Hall.ToList(); 
+                new Booking { StartDateTime = DateTime.Now.AddDays(1).AddHours(9), EndDateTime = DateTime.Now.AddDays(1).AddHours(11), HallId = 1, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(1).AddHours(12), EndDateTime = DateTime.Now.AddDays(1).AddHours(14), HallId = 2, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(2).AddHours(10), EndDateTime = DateTime.Now.AddDays(2).AddHours(12), HallId = 3, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(2).AddHours(14), EndDateTime = DateTime.Now.AddDays(2).AddHours(16), HallId = 4, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(3).AddHours(9), EndDateTime = DateTime.Now.AddDays(3).AddHours(11), HallId = 5, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(3).AddHours(12), EndDateTime = DateTime.Now.AddDays(3).AddHours(14), HallId = 1, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(4).AddHours(10), EndDateTime = DateTime.Now.AddDays(4).AddHours(12), HallId = 2, AICUserId = demoUser.Id },  
+                new Booking { StartDateTime = DateTime.Now.AddDays(4).AddHours(13), EndDateTime = DateTime.Now.AddDays(4).AddHours(15), HallId = 3, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(5).AddHours(9), EndDateTime = DateTime.Now.AddDays(5).AddHours(11), HallId = 4, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(5).AddHours(12), EndDateTime = DateTime.Now.AddDays(5).AddHours(14), HallId = 5, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(6).AddHours(10), EndDateTime = DateTime.Now.AddDays(6).AddHours(12), HallId = 1, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(6).AddHours(13), EndDateTime = DateTime.Now.AddDays(6).AddHours(15), HallId = 2, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(7).AddHours(9), EndDateTime = DateTime.Now.AddDays(7).AddHours(11), HallId = 3, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(7).AddHours(12), EndDateTime = DateTime.Now.AddDays(7).AddHours(14), HallId = 4, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(8).AddHours(10), EndDateTime = DateTime.Now.AddDays(8).AddHours(12), HallId = 5, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(8).AddHours(14), EndDateTime = DateTime.Now.AddDays(8).AddHours(16), HallId = 1, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(9).AddHours(9), EndDateTime = DateTime.Now.AddDays(9).AddHours(11), HallId = 2, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(9).AddHours(13), EndDateTime = DateTime.Now.AddDays(9).AddHours(15), HallId = 3, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(10).AddHours(10), EndDateTime = DateTime.Now.AddDays(10).AddHours(12), HallId = 4, AICUserId = demoUser.Id },
+                new Booking { StartDateTime = DateTime.Now.AddDays(10).AddHours(14), EndDateTime = DateTime.Now.AddDays(10).AddHours(16), HallId = 5, AICUserId = demoUser.Id }
+            };
 
-                var bookings = Enumerable.Range(1, 20).Select(i => new Booking
-                {
-                    StartDateTime = DateTime.Now.AddDays(i).Date.AddHours(10),
-                    EndDateTime = DateTime.Now.AddDays(i).Date.AddHours(12),
-                    HallId = halls[i % halls.Count].HallId,
-                    Hall = halls[i % halls.Count],   
-                    AICUserId = demoUser.Id,
-                    AICUser = demoUser               
-                }).ToList();
-
-                context.Booking.AddRange(bookings);
-                context.SaveChanges();
-            }
-
-            //context.SaveChanges();
+            context.Booking.AddRange(bookings);
+            context.SaveChanges();  // Save bookings to the database
         }
     }
 }

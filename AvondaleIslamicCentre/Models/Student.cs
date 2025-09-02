@@ -21,6 +21,7 @@ namespace AvondaleIslamicCentre.Models
         [MinLength(2)]
         [MaxLength(50)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
+        [Display(Name = "Guardian First Name")]
         public string GuardianFirstName { get; set; } = string.Empty; // First name of the guardian
 
         [StringLength(100)]
@@ -28,6 +29,7 @@ namespace AvondaleIslamicCentre.Models
         [MinLength(2)]
         [MaxLength(50)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
+        [Display(Name = "Guardian Last Name")]
         public string GuardianLastName { get; set; } = string.Empty; // Last name of the guardian
 
         [StringLength(100)]
@@ -35,6 +37,7 @@ namespace AvondaleIslamicCentre.Models
         [MinLength(3)]
         [MaxLength(25)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; } = string.Empty; // First name of the student
 
         [StringLength(100)]
@@ -42,6 +45,7 @@ namespace AvondaleIslamicCentre.Models
         [MinLength(3)]
         [MaxLength(25)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; } = string.Empty; // Last name of the student
 
         [Required]
@@ -66,10 +70,12 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [StringLength(20, ErrorMessage = "Quran Nazira must be under 20 characters.")]
+        [Display(Name = "Quran Nazira")]
         public string QuranNazira { get; set; } = string.Empty;
 
         [Required]
         [StringLength(20, ErrorMessage = "Quran Hifz must be under 20 characters.")]
+        [Display(Name = "Quran Hifz")]
         public string QuranHifz { get; set; } = string.Empty; 
 
         [Required]
@@ -77,6 +83,8 @@ namespace AvondaleIslamicCentre.Models
         public string Address { get; set; } = string.Empty; // Address of the guardian
 
         [Required]
+        [Display(Name = "Date of Birth")]
+        [DOBValidator]
         public DateTime DateOfBirth { get; set; } // Date of birth of the student
 
         [Required]
