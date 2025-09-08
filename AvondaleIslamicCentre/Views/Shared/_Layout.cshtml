@@ -24,6 +24,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/Images/AIC logo.png" width="110" height="80" class="d-inline-block align-text-top" asp-append-version="true" />
                 </a>
@@ -34,6 +35,24 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Halls" asp-action="Index">Hall</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Index">Student</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="Index">Teacher</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Classes" asp-action="Index">Class</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -49,25 +68,61 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Classes" asp-action="Index">Class</a>
-                        </li>
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Halls" asp-action="Index">Hall</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Students" asp-action="Index">Student</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="Index">Teacher</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
-                            </li>
-                        }
                     </ul>
+                    <style>
+                        .navbar {
+                            background-color: #f0fff4 !important; 
+                            border-bottom: 2px solid #2d7034;
+                        }
+
+                            .navbar .nav-link {
+                                color: #2d7034 !important; 
+                                font-weight: 500;
+                                padding: 0.6rem 1.2rem;
+                                border-radius: 6px;
+                                position: relative;
+                                transition: all 0.3s ease-in-out;
+                            }
+
+                                .navbar .nav-link::after {
+                                    content: "";
+                                    position: absolute;
+                                    bottom: -4px;
+                                    left: 50%;
+                                    transform: translateX(-50%) scaleX(0);
+                                    width: 70%;
+                                    height: 3px;
+                                    background-color: #2d7034;
+                                    border-radius: 2px;
+                                    transition: transform 0.3s ease-in-out;
+                                }
+
+                                .navbar .nav-link:hover {
+                                    color: #ffffff !important;
+                                    background-color: #2d7034; 
+                                    transform: translateY(-2px);
+                                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+                                }
+
+                                    .navbar .nav-link:hover::after {
+                                        transform: translateX(-50%) scaleX(1);
+                                    }
+
+                                /* Active link */
+                                .navbar .nav-link.active {
+                                    background-color: #2d7034;
+                                    color: #ffffff !important;
+                                    font-weight: 600;
+                                }
+
+                        .navbar-brand img {
+                            transition: transform 0.3s ease;
+                        }
+
+                            .navbar-brand img:hover {
+                                transform: scale(1.05);
+                            }
+                    </style>
                     <partial name="_LoginPartial" />
                 </div>
             </div>

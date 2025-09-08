@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AvondaleIslamicCentre.Areas.Identity.Data;
+using AvondaleIslamicCentre.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AvondaleIslamicCentre.Areas.Identity.Data;
-using AvondaleIslamicCentre.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AvondaleIslamicCentre.Controllers
 {
+    [Authorize]
     public class NoticesController : Controller
     {
         private readonly AICDbContext _context;

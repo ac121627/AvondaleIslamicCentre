@@ -53,11 +53,15 @@ namespace AvondaleIslamicCentre.Models
         [StringLength(100, ErrorMessage = "Email must be under 100 characters.")]
         public string Email { get; set; } = string.Empty; // Email of the guardian
 
-        [Required]
-        [Phone]
-        [DataType(DataType.PhoneNumber)]
-        [Display(Name = "Phone Number")]
-        [StringLength(17, ErrorMessage = "Phone number cannot exceed 17 digits.")]
+        [Required, Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber), MaxLength(17)]
+        [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
+        ErrorMessage = "Phone Number is not valid.\n\n" +
+               "For New Zealand:\n" +
+               "+64 followed by a 2-digit area code (20-26),\n" +
+               "a 3- or 4-digit local number,\n" +
+               "and a 4- or 5-digit subscriber number.\n" +
+               "(e.g., +64 20-345-6789 or +64 22-1234-5678).")]
         public string PhoneNumber { get; set; } = string.Empty; // Phone number of the guardian
 
         [Required]
