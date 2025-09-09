@@ -53,37 +53,40 @@ h1, h4 {
 
 .btn-create {
     background-color: #28a745;
-    color: white;
+    color: white !important;
 }
 
     .btn-create:hover {
         background-color: #218838;
+        color: white !important;
     }
-
 .btn-edit {
     background-color: #ffc107;
-    color: black;
+    color: black !important;
 }
 
     .btn-edit:hover {
         background-color: #e0a800;
-        color: white;
+        color: black !important; 
     }
 
 .btn-details {
     background-color: #007bff;
-    color: white;
+    color: white !important;
 }
 
     .btn-details:hover {
         background-color: #0069d9;
+        color: white !important; 
     }
+
 
 .btn-delete {
     background-color: #dc3545;
-    color: white;
+    color: white !important;
 }
 
     .btn-delete:hover {
         background-color: #c82333;
+        color: white !important; 
     }
