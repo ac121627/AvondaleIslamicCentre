@@ -7,47 +7,32 @@
 <h1>Bookings</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-create">Create New Booking</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Hall)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AICUser)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.StartDateTime)</th>
+            <th>@Html.DisplayNameFor(model => model.EndDateTime)</th>
+            <th>@Html.DisplayNameFor(model => model.Hall)</th>
+            <th>@Html.DisplayNameFor(model => model.AICUser)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hall.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AICUser.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.StartDateTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDateTime)</td>
+                <td>@Html.DisplayFor(modelItem => item.Hall.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.AICUser.Id)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-edit btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-details btn-sm ms-1">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-delete btn-sm ms-1">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
