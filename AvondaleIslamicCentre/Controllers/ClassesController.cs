@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class ClassesController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public ClassesController(AICDbContext context)
         {
@@ -22,10 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Classes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var classesWithTeachers = _context.Class.Include(c => c.Teacher);
-            return View(await classesWithTeachers.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var classes = _context.Class.Include(c => c.Teacher).AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                classes = classes.Where(c => c.ClassName.Contains(searchString) || c.Description.Contains(searchString));
+            }
+
+            classes = sortOrder switch
+            {
+                "name_desc" => classes.OrderByDescending(c => c.ClassName),
+                _ => classes.OrderBy(c => c.ClassName),
+            };
+
+            return View(await PaginatedList<Class>.CreateAsync(classes.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Classes/Details/5

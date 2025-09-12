@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class HallsController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public HallsController(AICDbContext context)
         {
@@ -22,9 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Halls
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            return View(await _context.Hall.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var halls = from h in _context.Hall select h;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                halls = halls.Where(h => h.Name.Contains(searchString));
+            }
+
+            halls = sortOrder switch
+            {
+                "name_desc" => halls.OrderByDescending(h => h.Name),
+                _ => halls.OrderBy(h => h.Name),
+            };
+
+            return View(await PaginatedList<Hall>.CreateAsync(halls.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Halls/Details/5

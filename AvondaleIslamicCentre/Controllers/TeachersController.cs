@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class TeachersController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public TeachersController(AICDbContext context)
         {
@@ -22,9 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Teachers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            return View(await _context.Teachers.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var teachers = from t in _context.Teachers select t;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                teachers = teachers.Where(t => t.FirstName.Contains(searchString) || t.LastName.Contains(searchString) || t.Email.Contains(searchString));
+            }
+
+            teachers = sortOrder switch
+            {
+                "name_desc" => teachers.OrderByDescending(t => t.FirstName).ThenByDescending(t => t.LastName),
+                _ => teachers.OrderBy(t => t.FirstName).ThenBy(t => t.LastName),
+            };
+
+            return View(await PaginatedList<Teacher>.CreateAsync(teachers.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Teachers/Details/5

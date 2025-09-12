@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class NoticesController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public NoticesController(AICDbContext context)
         {
@@ -22,10 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Notices
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var aICDbContext = _context.Notices.Include(n => n.AICUser);
-            return View(await aICDbContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var notices = _context.Notices.Include(n => n.AICUser).AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                notices = notices.Where(n => n.Title.Contains(searchString) || n.Message.Contains(searchString));
+            }
+
+            notices = sortOrder switch
+            {
+                "date_desc" => notices.OrderByDescending(n => n.PostedAt),
+                _ => notices.OrderBy(n => n.PostedAt),
+            };
+
+            return View(await PaginatedList<Notice>.CreateAsync(notices.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Notices/Details/5
@@ -55,13 +72,11 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // POST: Notices/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(notice);
                 await _context.SaveChangesAsync();
@@ -89,8 +104,6 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // POST: Notices/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
@@ -100,7 +113,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

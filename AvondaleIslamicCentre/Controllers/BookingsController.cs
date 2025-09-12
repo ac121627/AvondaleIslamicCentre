@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class BookingsController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public BookingsController(AICDbContext context)
         {
@@ -22,10 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Bookings
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var aICDbContext = _context.Booking.Include(b => b.AICUser).Include(b => b.Hall);
-            return View(await aICDbContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var bookings = _context.Booking.Include(b => b.AICUser).Include(b => b.Hall).AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                bookings = bookings.Where(b => b.AICUserId.Contains(searchString) || b.Hall.Name.Contains(searchString));
+            }
+
+            bookings = sortOrder switch
+            {
+                "date_desc" => bookings.OrderByDescending(b => b.StartDateTime),
+                _ => bookings.OrderBy(b => b.StartDateTime),
+            };
+
+            return View(await PaginatedList<Booking>.CreateAsync(bookings.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Bookings/Details/5
@@ -63,7 +80,7 @@ namespace AvondaleIslamicCentre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
@@ -104,7 +121,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

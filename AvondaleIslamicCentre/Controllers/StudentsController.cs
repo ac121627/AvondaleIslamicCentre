@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class StudentsController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public StudentsController(AICDbContext context)
         {
@@ -22,10 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var aICDbContext = _context.Students.Include(s => s.Class).Include(s => s.Teacher);
-            return View(await aICDbContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var students = _context.Students.Include(s => s.Class).Include(s => s.Teacher).AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString) || s.GuardianFirstName.Contains(searchString) || s.GuardianLastName.Contains(searchString));
+            }
+
+            students = sortOrder switch
+            {
+                "name_desc" => students.OrderByDescending(s => s.FirstName).ThenByDescending(s => s.LastName),
+                _ => students.OrderBy(s => s.FirstName).ThenBy(s => s.LastName),
+            };
+
+            return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Students/Details/5

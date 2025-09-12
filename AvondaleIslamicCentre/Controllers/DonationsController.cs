@@ -15,6 +15,7 @@ namespace AvondaleIslamicCentre.Controllers
     public class DonationsController : Controller
     {
         private readonly AICDbContext _context;
+        private const int PageSize = 10;
 
         public DonationsController(AICDbContext context)
         {
@@ -22,10 +23,26 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Donations
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
-            var aICDbContext = _context.Donations.Include(d => d.AICUser);
-            return View(await aICDbContext.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var donations = _context.Donations.Include(d => d.AICUser).AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                donations = donations.Where(d => d.DonorName.Contains(searchString) || d.DonationType.Contains(searchString) || d.PaymentMethod.Contains(searchString));
+            }
+
+            donations = sortOrder switch
+            {
+                "date_desc" => donations.OrderByDescending(d => d.DateDonated),
+                _ => donations.OrderBy(d => d.DateDonated),
+            };
+
+            return View(await PaginatedList<Donation>.CreateAsync(donations.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
         // GET: Donations/Details/5
@@ -55,13 +72,11 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // POST: Donations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(donation);
                 await _context.SaveChangesAsync();
@@ -89,8 +104,6 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // POST: Donations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
@@ -100,7 +113,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
