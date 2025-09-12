@@ -1,3 +1,17 @@
+:root {
+  --brand-green: #2d7034;
+  --brand-green-dark: #225b2b;
+  --brand-accent: #eaf7ea;
+  --muted: #6c757d;
+}
+
+/* Page background */
+body {
+  background: linear-gradient(180deg, #f6fbf7 0%, #ffffff 40%);
+  color: #1b1b1b;
+}
+
+/* Keep existing responsive/layout rules */
 @media (min-width: 768px) {
   html, body {
     font-size: 16px;
@@ -7,9 +21,92 @@
     flex-direction:column;
   }
 }
-    body > .container {
-        flex: 1;
-    }
+body > .container {
+    flex: 1;
+}
+
+/* Card used for auth pages */
+.auth-card {
+  max-width: 920px;
+  margin: 48px auto;
+  background: linear-gradient(180deg, #ffffff 0%, var(--brand-accent) 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(37, 99, 53, 0.12);
+  display: grid;
+  grid-template-columns: 1fr 420px;
+}
+
+.auth-card .auth-left {
+  padding: 36px;
+  background: linear-gradient(135deg, rgba(45,112,52,0.95), rgba(34,91,43,0.95));
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+
+.auth-card .auth-left h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0;
+}
+
+.auth-card .auth-left p {
+  color: rgba(255,255,255,0.9);
+}
+
+.auth-card .auth-right {
+  padding: 32px;
+}
+
+@media (max-width: 991px) {
+  .auth-card { grid-template-columns: 1fr; }
+  .auth-card .auth-left { display:block; padding:24px; }
+}
+
+/* Form styles */
+.form-control:focus {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 0.15rem rgba(45,112,52,0.15);
+}
+
+.form-floating > label {
+  color: var(--muted);
+}
+
+.btn-primary {
+  background-color: var(--brand-green) !important;
+  border-color: var(--brand-green) !important;
+  color: #fff !important;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-green-dark) !important;
+  border-color: var(--brand-green-dark) !important;
+  transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+  color: var(--brand-green);
+  border-color: var(--brand-green);
+}
+
+.small-muted {
+  color: var(--muted);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+/* helper spacing for social buttons area */
+.social-buttons button { margin-right: 8px; margin-bottom:8px; }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
