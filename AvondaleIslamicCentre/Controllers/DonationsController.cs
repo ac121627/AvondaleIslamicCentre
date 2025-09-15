@@ -26,20 +26,23 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["AmountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "amount_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "date" ? "date_desc" : "date";
             ViewData["CurrentFilter"] = searchString;
 
             var donations = _context.Donations.Include(d => d.AICUser).AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                donations = donations.Where(d => d.DonorName.Contains(searchString) || d.DonationType.Contains(searchString) || d.PaymentMethod.Contains(searchString));
+                donations = donations.Where(d => (d.DonorName != null && d.DonorName.Contains(searchString)) || (d.Description != null && d.Description.Contains(searchString)));
             }
 
             donations = sortOrder switch
             {
+                "amount_desc" => donations.OrderByDescending(d => d.Amount),
+                "date" => donations.OrderBy(d => d.DateDonated),
                 "date_desc" => donations.OrderByDescending(d => d.DateDonated),
-                _ => donations.OrderBy(d => d.DateDonated),
+                _ => donations.OrderBy(d => d.Amount),
             };
 
             return View(await PaginatedList<Donation>.CreateAsync(donations.AsNoTracking(), pageNumber ?? 1, PageSize));

@@ -26,20 +26,20 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewData["CurrentFilter"] = searchString;
 
             var reports = _context.Report.Include(r => r.AICUser).AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                reports = reports.Where(r => r.FirstName.Contains(searchString) || r.LastName.Contains(searchString) || r.Description.Contains(searchString));
+                reports = reports.Where(r => (r.FirstName != null && r.FirstName.Contains(searchString)) || (r.LastName != null && r.LastName.Contains(searchString)));
             }
 
             reports = sortOrder switch
             {
-                "name_desc" => reports.OrderByDescending(r => r.FirstName).ThenByDescending(r => r.LastName),
-                _ => reports.OrderBy(r => r.FirstName).ThenBy(r => r.LastName),
+                "date_desc" => reports.OrderByDescending(r => r.CreatedAt),
+                _ => reports.OrderBy(r => r.CreatedAt),
             };
 
             return View(await PaginatedList<Report>.CreateAsync(reports.AsNoTracking(), pageNumber ?? 1, PageSize));

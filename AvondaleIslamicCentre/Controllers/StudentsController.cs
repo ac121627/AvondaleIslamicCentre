@@ -26,20 +26,20 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["ClassSortParm"] = String.IsNullOrEmpty(sortOrder) ? "class_desc" : "";
             ViewData["CurrentFilter"] = searchString;
 
             var students = _context.Students.Include(s => s.Class).Include(s => s.Teacher).AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString) || s.GuardianFirstName.Contains(searchString) || s.GuardianLastName.Contains(searchString));
+                students = students.Where(s => (s.FirstName != null && s.FirstName.Contains(searchString)) || (s.LastName != null && s.LastName.Contains(searchString)));
             }
 
             students = sortOrder switch
             {
-                "name_desc" => students.OrderByDescending(s => s.FirstName).ThenByDescending(s => s.LastName),
-                _ => students.OrderBy(s => s.FirstName).ThenBy(s => s.LastName),
+                "class_desc" => students.OrderByDescending(s => s.Class.ClassName),
+                _ => students.OrderBy(s => s.Class.ClassName),
             };
 
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, PageSize));

@@ -26,7 +26,7 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CapacitySortParm"] = String.IsNullOrEmpty(sortOrder) ? "capacity_desc" : "";
             ViewData["CurrentFilter"] = searchString;
 
             var halls = from h in _context.Hall select h;
@@ -38,8 +38,8 @@ namespace AvondaleIslamicCentre.Controllers
 
             halls = sortOrder switch
             {
-                "name_desc" => halls.OrderByDescending(h => h.Name),
-                _ => halls.OrderBy(h => h.Name),
+                "capacity_desc" => halls.OrderByDescending(h => h.Capacity),
+                _ => halls.OrderBy(h => h.Capacity),
             };
 
             return View(await PaginatedList<Hall>.CreateAsync(halls.AsNoTracking(), pageNumber ?? 1, PageSize));

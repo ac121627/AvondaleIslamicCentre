@@ -33,7 +33,7 @@ namespace AvondaleIslamicCentre.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                notices = notices.Where(n => n.Title.Contains(searchString) || n.Message.Contains(searchString));
+                notices = notices.Where(n => (n.Title != null && n.Title.Contains(searchString)) || (n.Message != null && n.Message.Contains(searchString)));
             }
 
             notices = sortOrder switch

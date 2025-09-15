@@ -26,19 +26,22 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["ClassSortParm"] = String.IsNullOrEmpty(sortOrder) ? "classname_desc" : "";
+            ViewData["StudentsSortParm"] = sortOrder == "students" ? "students_desc" : "students";
             ViewData["CurrentFilter"] = searchString;
 
             var classes = _context.Class.Include(c => c.Teacher).AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                classes = classes.Where(c => c.ClassName.Contains(searchString) || c.Description.Contains(searchString));
+                classes = classes.Where(c => c.ClassName.Contains(searchString) || (c.Teacher != null && c.Teacher.FirstName.Contains(searchString)));
             }
 
             classes = sortOrder switch
             {
-                "name_desc" => classes.OrderByDescending(c => c.ClassName),
+                "classname_desc" => classes.OrderByDescending(c => c.ClassName),
+                "students" => classes.OrderBy(c => c.CurrentStudents),
+                "students_desc" => classes.OrderByDescending(c => c.CurrentStudents),
                 _ => classes.OrderBy(c => c.ClassName),
             };
 
