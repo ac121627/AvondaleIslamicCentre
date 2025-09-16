@@ -201,7 +201,7 @@ namespace AvondaleIslamicCentre.Data
             };
 
             context.Booking.AddRange(bookings);
-            context.SaveChanges();  // Save bookings to the database
+            context.SaveChanges();
         }
     }
 }

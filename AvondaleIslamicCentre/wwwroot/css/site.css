@@ -5,13 +5,11 @@
   --muted: #6c757d;
 }
 
-/* Page background */
 body {
   background: linear-gradient(180deg, #f6fbf7 0%, #ffffff 40%);
   color: #1b1b1b;
 }
 
-/* Keep existing responsive/layout rules */
 @media (min-width: 768px) {
   html, body {
     font-size: 16px;
@@ -25,7 +23,6 @@ body > .container {
     flex: 1;
 }
 
-/* Card used for auth pages */
 .auth-card {
   max-width: 920px;
   margin: 48px auto;
@@ -105,7 +102,6 @@ body > .container {
   color: var(--muted);
 }
 
-/* helper spacing for social buttons area */
 .social-buttons button { margin-right: 8px; margin-bottom:8px; }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
