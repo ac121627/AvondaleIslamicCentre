@@ -45,7 +45,7 @@ namespace AvondaleIslamicCentre.Controllers
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
-        // GET: Students/Details/5
+        // GET: Students/Details/5 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
