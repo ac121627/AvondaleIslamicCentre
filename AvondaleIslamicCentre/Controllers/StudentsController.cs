@@ -26,7 +26,8 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["ClassSortParm"] = String.IsNullOrEmpty(sortOrder) ? "class_desc" : "";
+            ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
+            ViewData["LastNameSortParm"] = sortOrder == "lastname" ? "lastname_desc" : "lastname";
             ViewData["CurrentFilter"] = searchString;
 
             var students = _context.Students.Include(s => s.Class).Include(s => s.Teacher).AsQueryable();
@@ -38,8 +39,10 @@ namespace AvondaleIslamicCentre.Controllers
 
             students = sortOrder switch
             {
-                "class_desc" => students.OrderByDescending(s => s.Class.ClassName),
-                _ => students.OrderBy(s => s.Class.ClassName),
+                "firstname_desc" => students.OrderByDescending(s => s.FirstName),
+                "lastname" => students.OrderBy(s => s.LastName),
+                "lastname_desc" => students.OrderByDescending(s => s.LastName),
+                _ => students.OrderBy(s => s.FirstName),
             };
 
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, PageSize));
@@ -66,6 +69,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Students/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
@@ -74,14 +78,23 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // POST: Students/Create
-      
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("StudentId,GuardianFirstName,GuardianLastName,FirstName,LastName,Email,PhoneNumber,Gender,Ethnicity,QuranNazira,QuranHifz,DateOfBirth,Address,ClassId,TeacherId")] Student student)
         {
             if (ModelState.IsValid)
             {
+                // ensure class and teacher exist
+                if (!_context.Class.Any(c => c.ClassId == student.ClassId) || !_context.Teachers.Any(t => t.TeacherId == student.TeacherId))
+                {
+                    ModelState.AddModelError(string.Empty, "Selected Class or Teacher does not exist.");
+                    ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", student.ClassId);
+                    ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", student.TeacherId);
+                    return View(student);
+                }
+
                 _context.Add(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -92,6 +105,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Students/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -114,6 +128,7 @@ namespace AvondaleIslamicCentre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("StudentId,GuardianFirstName,GuardianLastName,FirstName,LastName,Email,PhoneNumber,Gender,Ethnicity,QuranNazira,QuranHifz,DateOfBirth,Address,ClassId,TeacherId")] Student student)
         {
             if (id != student.StudentId)
@@ -147,6 +162,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Students/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,6 +185,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Students.FindAsync(id);

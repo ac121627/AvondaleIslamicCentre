@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace AvondaleIslamicCentre.Controllers
 {
-    [Authorize]
     public class NoticesController : Controller
     {
         private readonly AICDbContext _context;
@@ -65,28 +65,31 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Notices/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
         // POST: Notices/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("NoticeId,Title,Message,UpdatedAt")] Notice notice)
         {
             if (ModelState.IsValid)
             {
+                notice.PostedAt = DateTime.Now;
+                notice.AICUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
                 _context.Add(notice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
             return View(notice);
         }
 
         // GET: Notices/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,14 +102,14 @@ namespace AvondaleIslamicCentre.Controllers
             {
                 return NotFound();
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
             return View(notice);
         }
 
         // POST: Notices/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NoticeId,Title,Message,PostedAt,UpdatedAt,AICUserId")] Notice notice)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("NoticeId,Title,Message,PostedAt,UpdatedAt")] Notice notice)
         {
             if (id != notice.NoticeId)
             {
@@ -117,6 +120,10 @@ namespace AvondaleIslamicCentre.Controllers
             {
                 try
                 {
+                    var existing = await _context.Notices.AsNoTracking().FirstOrDefaultAsync(n => n.NoticeId == id);
+                    if (existing == null) return NotFound();
+                    notice.AICUserId = existing.AICUserId;
+                    notice.UpdatedAt = DateTime.Now;
                     _context.Update(notice);
                     await _context.SaveChangesAsync();
                 }
@@ -133,11 +140,11 @@ namespace AvondaleIslamicCentre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", notice.AICUserId);
             return View(notice);
         }
 
         // GET: Notices/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -159,6 +166,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Notices/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var notice = await _context.Notices.FindAsync(id);

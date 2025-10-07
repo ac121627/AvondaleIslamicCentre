@@ -29,10 +29,10 @@
                 @Html.DisplayNameFor(model => model[0].GuardianLastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].FirstName)
+                <a asp-action="Index" asp-route-sortOrder="@(ViewData["FirstNameSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].FirstName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].LastName)
+                <a asp-action="Index" asp-route-sortOrder="@(ViewData["LastNameSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].LastName)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Email)
@@ -59,7 +59,7 @@
                 @Html.DisplayNameFor(model => model[0].Address)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@(ViewData["ClassSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].Class)</a>
+                @Html.DisplayNameFor(model => model[0].Class)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Teacher)
@@ -113,10 +113,10 @@
                 @Html.DisplayFor(modelItem => item.Teacher.Email)
             </td>
             <td>
-                    <a asp-action="Edit" asp-route-id="@item.StudentId" class="btn btn-edit btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.StudentId" class="btn btn-details btn-sm ms-1">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.StudentId" class="btn btn-delete btn-sm ms-1">Delete</a>
-                </td>
+                <a asp-action="Edit" asp-route-id="@item.StudentId" class="btn btn-edit btn-sm">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.StudentId" class="btn btn-details btn-sm ms-1">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.StudentId" class="btn btn-delete btn-sm ms-1">Delete</a>
+            </td>
         </tr>
 }
     </tbody>

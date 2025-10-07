@@ -1,9 +1,13 @@
-﻿using AvondaleIslamicCentre.Areas.Identity.Data;
-using AvondaleIslamicCentre.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using AvondaleIslamicCentre.Areas.Identity.Data;
+using AvondaleIslamicCentre.Models;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +30,7 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["CapacitySortParm"] = String.IsNullOrEmpty(sortOrder) ? "capacity_desc" : "";
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["CurrentFilter"] = searchString;
 
             var halls = from h in _context.Hall select h;
@@ -38,8 +42,8 @@ namespace AvondaleIslamicCentre.Controllers
 
             halls = sortOrder switch
             {
-                "capacity_desc" => halls.OrderByDescending(h => h.Capacity),
-                _ => halls.OrderBy(h => h.Capacity),
+                "name_desc" => halls.OrderByDescending(h => h.Name),
+                _ => halls.OrderBy(h => h.Name),
             };
 
             return View(await PaginatedList<Hall>.CreateAsync(halls.AsNoTracking(), pageNumber ?? 1, PageSize));
@@ -64,6 +68,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Halls/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -74,7 +79,8 @@ namespace AvondaleIslamicCentre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HallId,Name,Capacity,AvailableFrom,AvailableTo")] Hall hall)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("HallId,Name,Capacity")] Hall hall)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +92,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Halls/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,7 +113,8 @@ namespace AvondaleIslamicCentre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HallId,Name,Capacity,AvailableFrom,AvailableTo")] Hall hall)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("HallId,Name,Capacity")] Hall hall)
         {
             if (id != hall.HallId)
             {
@@ -137,6 +145,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Halls/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,6 +166,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Halls/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var hall = await _context.Hall.FindAsync(id);

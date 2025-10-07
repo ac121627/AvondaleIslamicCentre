@@ -10,7 +10,10 @@
 <h1>Notices</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-create">Make A New Notice</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-create">Make A New Notice</a>
+    }
 </p>
 
 <form method="get" class="mb-3">
@@ -34,9 +37,6 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].UpdatedAt)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].AICUser)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -56,13 +56,17 @@
                 @Html.DisplayFor(modelItem => item.UpdatedAt)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AICUser.Id)
-            </td>
-            <td>
+                @if (User.IsInRole("Admin"))
+                {
                     <a asp-action="Edit" asp-route-id="@item.NoticeId" class="btn btn-edit btn-sm">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.NoticeId" class="btn btn-details btn-sm ms-1">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.NoticeId" class="btn btn-delete btn-sm ms-1">Delete</a>
-                </td>
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.NoticeId" class="btn btn-details btn-sm">Details</a>
+                }
+            </td>
         </tr>
 }
     </tbody>

@@ -10,7 +10,10 @@
 <h1>Teachers</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-create">Add A New Teacher</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-create">Add A New Teacher</a>
+    }
 </p>
 
 <form method="get" class="mb-3">
@@ -23,13 +26,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model[0].FirstName)
+                <a asp-action="Index" asp-route-sortOrder="@(ViewData["FirstNameSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].FirstName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model[0].LastName)
+                <a asp-action="Index" asp-route-sortOrder="@(ViewData["LastNameSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].LastName)</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@(ViewData["EmailSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].Email)</a>
+                @Html.DisplayNameFor(model => model[0].Email)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].PhoneNumber)
@@ -53,10 +56,17 @@
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
             <td>
+                @if (User.IsInRole("Admin"))
+                {
                     <a asp-action="Edit" asp-route-id="@item.TeacherId" class="btn btn-edit btn-sm">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm ms-1">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.TeacherId" class="btn btn-delete btn-sm ms-1">Delete</a>
-                </td>
+                }
+                else
+                {
+                    <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm">Details</a>
+                }
+            </td>
         </tr>
 }
     </tbody>

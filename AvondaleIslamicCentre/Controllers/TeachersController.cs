@@ -26,20 +26,23 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["EmailSortParm"] = String.IsNullOrEmpty(sortOrder) ? "email_desc" : "";
+            ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
+            ViewData["LastNameSortParm"] = sortOrder == "lastname" ? "lastname_desc" : "lastname";
             ViewData["CurrentFilter"] = searchString;
 
-            var teachers = from t in _context.Teachers select t;
+            var teachers = _context.Teachers.AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                teachers = teachers.Where(t => (t.FirstName != null && t.FirstName.Contains(searchString)) || (t.LastName != null && t.LastName.Contains(searchString)));
+                teachers = teachers.Where(t => t.FirstName.Contains(searchString) || t.LastName.Contains(searchString));
             }
 
             teachers = sortOrder switch
             {
-                "email_desc" => teachers.OrderByDescending(t => t.Email),
-                _ => teachers.OrderBy(t => t.Email),
+                "firstname_desc" => teachers.OrderByDescending(t => t.FirstName),
+                "lastname" => teachers.OrderBy(t => t.LastName),
+                "lastname_desc" => teachers.OrderByDescending(t => t.LastName),
+                _ => teachers.OrderBy(t => t.FirstName),
             };
 
             return View(await PaginatedList<Teacher>.CreateAsync(teachers.AsNoTracking(), pageNumber ?? 1, PageSize));
@@ -64,6 +67,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Teachers/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -74,6 +78,7 @@ namespace AvondaleIslamicCentre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("TeacherId,FirstName,LastName,Email,PhoneNumber")] Teacher teacher)
         {
             if (ModelState.IsValid)
@@ -86,6 +91,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Teachers/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,6 +112,7 @@ namespace AvondaleIslamicCentre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("TeacherId,FirstName,LastName,Email,PhoneNumber")] Teacher teacher)
         {
             if (id != teacher.TeacherId)
@@ -137,6 +144,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Teachers/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,6 +165,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Teachers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var teacher = await _context.Teachers.FindAsync(id);

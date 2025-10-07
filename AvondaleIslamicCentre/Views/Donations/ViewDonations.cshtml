@@ -50,43 +50,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDonated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DonorName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DonationType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentMethod)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AICUser.Id)
-            </td>
-            <td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-action="Edit" asp-route-id="@item.DonationId" class="btn btn-edit btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.DonationId" class="btn btn-details btn-sm ms-1">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.DonationId" class="btn btn-delete btn-sm ms-1">Delete</a>
-                }
-                else if (User.IsInRole("Member"))
-                {
-                    <a asp-action="Details" asp-route-id="@item.DonationId" class="btn btn-details btn-sm">Details</a>
-                }
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateDonated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DonorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DonationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMethod)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AICUser.Id)
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.DonationId" class="btn btn-edit btn-sm">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.DonationId" class="btn btn-details btn-sm ms-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.DonationId" class="btn btn-delete btn-sm ms-1">Delete</a>
+                    }
+                    else if (User.IsInRole("Member"))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.DonationId" class="btn btn-details btn-sm">Details</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 

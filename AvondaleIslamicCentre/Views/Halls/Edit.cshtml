@@ -23,16 +23,6 @@
                 <input asp-for="Capacity" class="form-control" />
                 <span asp-validation-for="Capacity" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AvailableFrom" class="control-label"></label>
-                <input asp-for="AvailableFrom" class="form-control" />
-                <span asp-validation-for="AvailableFrom" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvailableTo" class="control-label"></label>
-                <input asp-for="AvailableTo" class="form-control" />
-                <span asp-validation-for="AvailableTo" class="text-danger"></span>
-            </div>
             <div class="form-group mt-3">
                 <input type="submit" value="Save Changes" class="btn btn-edit" />
                 <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
@@ -42,5 +32,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

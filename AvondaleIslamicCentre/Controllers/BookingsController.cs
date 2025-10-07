@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace AvondaleIslamicCentre.Controllers
 {
@@ -26,19 +27,22 @@ namespace AvondaleIslamicCentre.Controllers
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["StartSortParm"] = String.IsNullOrEmpty(sortOrder) ? "start_desc" : "";
+            ViewData["EndSortParm"] = sortOrder == "end" ? "end_desc" : "end";
             ViewData["CurrentFilter"] = searchString;
 
             var bookings = _context.Booking.Include(b => b.AICUser).Include(b => b.Hall).AsQueryable();
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                bookings = bookings.Where(b => b.AICUserId.Contains(searchString) || b.Hall.Name.Contains(searchString));
+                bookings = bookings.Where(b => (b.AICUserId != null && b.AICUserId.Contains(searchString)) || b.Hall.Name.Contains(searchString));
             }
 
             bookings = sortOrder switch
             {
-                "date_desc" => bookings.OrderByDescending(b => b.StartDateTime),
+                "start_desc" => bookings.OrderByDescending(b => b.StartDateTime),
+                "end" => bookings.OrderBy(b => b.EndDateTime),
+                "end_desc" => bookings.OrderByDescending(b => b.EndDateTime),
                 _ => bookings.OrderBy(b => b.StartDateTime),
             };
 
@@ -66,32 +70,40 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Bookings/Create
+        [Authorize(Roles = "Admin,Member")]
         public IActionResult Create()
         {
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name");
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
         }
 
         // POST: Bookings/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Create([Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
         {
+            // If no AICUserId supplied, use current user
+            if (string.IsNullOrWhiteSpace(booking.AICUserId))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                booking.AICUserId = userId ?? string.Empty;
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", booking.AICUserId);
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
             return View(booking);
         }
 
         // GET: Bookings/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -104,16 +116,15 @@ namespace AvondaleIslamicCentre.Controllers
             {
                 return NotFound();
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", booking.AICUserId);
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
             return View(booking);
         }
 
         // POST: Bookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
         {
             if (id != booking.BookingId)
@@ -141,12 +152,13 @@ namespace AvondaleIslamicCentre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "Id", booking.AICUserId);
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
+            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
             return View(booking);
         }
 
         // GET: Bookings/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,6 +181,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var booking = await _context.Booking.FindAsync(id);

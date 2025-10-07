@@ -1,9 +1,7 @@
 using AvondaleIslamicCentre.Areas.Identity.Data;
-using AvondaleIslamicCentre.Data;
+using AvondaleIslamicCentre;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,18 +19,27 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Initialize DB (roles, users, seed data)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await AICDbInitializer.InitializeAsync(services);
+    }
+    catch (Exception ex)
+    {
+        // Log or ignore in dev
+        Console.WriteLine($"Database seeding error: {ex.Message}");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await AICDbInitializer.InitializeAsync(services);
 }
 
 app.UseHttpsRedirection();

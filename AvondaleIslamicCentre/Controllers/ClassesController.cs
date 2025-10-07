@@ -65,6 +65,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Classes/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName");
@@ -74,6 +75,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Classes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ClassId,ClassName,Description,CurrentStudents,TeacherId")] Class classItem)
         {
             if (ModelState.IsValid)
@@ -87,6 +89,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Classes/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -103,6 +106,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Classes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ClassId,ClassName,Description,CurrentStudents,TeacherId")] Class classItem)
         {
             if (id != classItem.ClassId)
@@ -130,6 +134,7 @@ namespace AvondaleIslamicCentre.Controllers
         }
 
         // GET: Classes/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,6 +153,7 @@ namespace AvondaleIslamicCentre.Controllers
         // POST: Classes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var classItem = await _context.Class.FindAsync(id);

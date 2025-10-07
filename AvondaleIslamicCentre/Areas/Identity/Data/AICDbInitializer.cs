@@ -1,207 +1,292 @@
-﻿using AvondaleIslamicCentre.Areas.Identity.Data;
-using AvondaleIslamicCentre.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AvondaleIslamicCentre.Models;
 
-namespace AvondaleIslamicCentre.Data
+namespace AvondaleIslamicCentre.Areas.Identity.Data
 {
     public static class AICDbInitializer
     {
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
+            using var scope = serviceProvider.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<AICDbContext>();
+            var userManager = services.GetRequiredService<UserManager<AICUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var context = serviceProvider.GetRequiredService<AICDbContext>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<AICUser>>();
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            context.Database.EnsureCreated();
-
-            if (!await roleManager.RoleExistsAsync("Admin"))
+            // Apply pending migrations
+            try
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await context.Database.MigrateAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Migration error: {ex.Message}");
             }
 
-            var demoUser = await userManager.FindByEmailAsync("demo@aic.com");
-            if (demoUser == null)
+            // Create roles
+            var roles = new[] { "Admin", "Member" };
+            foreach (var role in roles)
             {
-                demoUser = new AICUser
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    UserName = "demo@aic.com",
-                    Email = "demo@aic.com",
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            // Create two users
+            var adminEmail = "admin@aic.com";
+            var memberEmail = "member@aic.com";
+
+            AICUser adminUser = await userManager.FindByEmailAsync(adminEmail);
+            if (adminUser == null)
+            {
+                var newAdmin = new AICUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
                     EmailConfirmed = true,
-                    FirstName = "Demo",
-                    LastName = "User"
+                    FirstName = "Site",
+                    LastName = "Admin",
+                    Phone = "+64 21-100-1001"
                 };
-
-                await userManager.CreateAsync(demoUser, "Demo@123"); // 👈 password
-                await userManager.AddToRoleAsync(demoUser, "Admin"); 
-            }
-
-            // Ensure database exists
-            context.Database.EnsureCreated();
-
-            // Only seed if there’s no data
-            if (context.Donations.Any())
-            {
-                return; // DB has been seeded
-            }
-
-            // ----- Halls -----
-            if (!context.Hall.Any())
-            {
-                var halls = Enumerable.Range(1, 20).Select(i => new Hall
+                var res = await userManager.CreateAsync(newAdmin, "Admin@123");
+                if (!res.Succeeded)
                 {
-                    Name = $"Hall {i}",
-                    Capacity = 50 + i,
-                    AvailableFrom = DateTime.Now.AddDays(1).Date.AddHours(9),
-                    AvailableTo = DateTime.Now.AddDays(1).Date.AddHours(17)
-                }).ToList();
-
-                context.Hall.AddRange(halls);
-                context.SaveChanges();
-            }
-
-            // ----- Teachers -----
-            if (!context.Teachers.Any())
-            {
-                var teachers = Enumerable.Range(1, 20).Select(i => new Teacher
+                    Console.WriteLine("Failed to create admin user: " + string.Join(';', res.Errors.Select(e => e.Description)));
+                }
+                else
                 {
-                    FirstName = $"Teacher{i}",
-                    LastName = $"Last{i}",
-                    Email = $"teacher{i}@school.com",
-                    PhoneNumber = $"+64 21-1234-56{i:D2}"
-                }).ToList();
-
-                context.Teachers.AddRange(teachers);
-                context.SaveChanges();
+                    await userManager.AddToRoleAsync(newAdmin, "Admin");
+                }
+                adminUser = await userManager.FindByEmailAsync(adminEmail);
             }
 
-            // ----- Classes -----
-            if (!context.Class.Any())
+            AICUser memberUser = await userManager.FindByEmailAsync(memberEmail);
+            if (memberUser == null)
             {
-                var teacherIds = context.Teachers.Select(t => t.TeacherId).ToList();
-                var classes = Enumerable.Range(1, 20).Select(i => new Class
+                var newMember = new AICUser
                 {
-                    ClassName = $"Class {i}",
-                    Description = $"This is class {i} description",
-                    CurrentStudents = i * 2,
-                    TeacherId = teacherIds[i % teacherIds.Count]
-                }).ToList();
-
-                context.Class.AddRange(classes);
-                context.SaveChanges();
-            }
-
-            // ----- Students -----
-            if (!context.Students.Any())
-            {
-                var classIds = context.Class.Select(c => c.ClassId).ToList();
-                var teacherIds = context.Teachers.Select(t => t.TeacherId).ToList();
-
-                var students = Enumerable.Range(1, 20).Select(i => new Student
+                    UserName = memberEmail,
+                    Email = memberEmail,
+                    EmailConfirmed = true,
+                    FirstName = "Regular",
+                    LastName = "Member",
+                    Phone = "+64 21-100-1002"
+                };
+                var resm = await userManager.CreateAsync(newMember, "Member@123");
+                if (!resm.Succeeded)
                 {
-                    GuardianFirstName = $"Guardian{i}",
-                    GuardianLastName = $"Surname{i}",
-                    FirstName = $"Student{i}",
-                    LastName = $"Last{i}",
-                    Email = $"student{i}@mail.com",
-                    PhoneNumber = $"+64 22-9876-5{i:D2}",
-                    Gender = i % 2 == 0 ? "Male" : "Female",
-                    Ethnicity = "Asian",
-                    QuranNazira = "2",
-                    QuranHifz = "1",
-                    Address = $"123{i} Street",
-                    DateOfBirth = DateTime.Now.AddYears(-10).AddDays(i),
-                    ClassId = classIds[i % classIds.Count],
-                    TeacherId = teacherIds[i % teacherIds.Count]
-                }).ToList();
-
-                context.Students.AddRange(students);
-                context.SaveChanges();
-            }
-
-            // ----- Donations -----
-            if (!context.Donations.Any())
-            {
-                var donations = Enumerable.Range(1, 20).Select(i => new Donation
+                    Console.WriteLine("Failed to create member user: " + string.Join(';', resm.Errors.Select(e => e.Description)));
+                }
+                else
                 {
-                    Amount = 10 * i,
-                    DateDonated = DateTime.Now.AddDays(-i),
-                    DonorName = $"Donor {i}",
-                    DonationType = "General",
-                    PaymentMethod = "Card",
-                    Description = $"Donation {i}",
-                    AICUserId = demoUser.Id,   
-                }).ToList();
-
-                context.Donations.AddRange(donations);
-                context.SaveChanges();
+                    await userManager.AddToRoleAsync(newMember, "Member");
+                }
+                memberUser = await userManager.FindByEmailAsync(memberEmail);
             }
 
-            // ----- Notices -----
-            if (!context.Notices.Any())
+            // Ensure adminUser exists for seeding relationships
+            if (adminUser == null)
             {
-                var notices = Enumerable.Range(1, 20).Select(i => new Notice
+                Console.WriteLine("Admin user not available; seeding of user-owned records will use member user or skip.");
+            }
+
+            // Seed Halls (4) - valid names and capacities
+            try
+            {
+                if (!context.Hall.Any())
                 {
-                    Title = $"Notice {i}",
-                    Message = $"This is notice {i} message.",
-                    PostedAt = DateTime.Now.AddDays(-i),
-                    UpdatedAt = null,
-                    AICUserId = demoUser.Id,   
-                }).ToList();
-
-                context.Notices.AddRange(notices);
-                context.SaveChanges();
+                    var halls = new List<Hall>
+                    {
+                        new Hall { Name = "Auditorium", Capacity = 150 },
+                        new Hall { Name = "Multipurpose Room", Capacity = 60 },
+                        new Hall { Name = "Lecture Theatre", Capacity = 80 },
+                        new Hall { Name = "Activity Studio", Capacity = 30 }
+                    };
+                    context.Hall.AddRange(halls);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Halls: " + ex.Message);
             }
 
-            // ----- Reports -----
-            if (!context.Report.Any())
+            // Seed Teachers (6)
+            try
             {
-                var reports = Enumerable.Range(1, 20).Select(i => new Report
+                if (!context.Teachers.Any())
                 {
-                    FirstName = $"Report{i}",
-                    LastName = $"Lastname{i}",
-                    Description = $"This is report {i} description",
-                    CreatedAt = DateTime.Now.AddDays(-i),
-                    UpdatedAt = DateTime.Now,
-                    CreatedBy = "System",
-                    UpdatedBy = "System",
-                    AICUserId = demoUser.Id,   
-                    AICUser = demoUser         
-                }).ToList();
-
-                context.Report.AddRange(reports);
-                context.SaveChanges();
+                    var teachers = new List<Teacher>
+                    {
+                        new Teacher { FirstName = "Aisha", LastName = "Khan", Email = "aisha.khan@aic.nz", PhoneNumber = "+64 21-111-0001" },
+                        new Teacher { FirstName = "David", LastName = "Ng", Email = "david.ng@aic.nz", PhoneNumber = "+64 21-111-0002" },
+                        new Teacher { FirstName = "Sana", LastName = "Ali", Email = "sana.ali@aic.nz", PhoneNumber = "+64 21-111-0003" },
+                        new Teacher { FirstName = "Liam", LastName = "Oconnor", Email = "liam.oconnor@aic.nz", PhoneNumber = "+64 21-111-0004" },
+                        new Teacher { FirstName = "Maya", LastName = "Patel", Email = "maya.patel@aic.nz", PhoneNumber = "+64 21-111-0005" },
+                        new Teacher { FirstName = "Noah", LastName = "Brown", Email = "noah.brown@aic.nz", PhoneNumber = "+64 21-111-0006" }
+                    };
+                    context.Teachers.AddRange(teachers);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Teachers: " + ex.Message);
             }
 
-            // ----- Bookings -----
-            var bookings = new List<Booking>
+            // Seed Classes (5)
+            try
             {
-                new Booking { StartDateTime = DateTime.Now.AddDays(1).AddHours(9), EndDateTime = DateTime.Now.AddDays(1).AddHours(11), HallId = 1, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(1).AddHours(12), EndDateTime = DateTime.Now.AddDays(1).AddHours(14), HallId = 2, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(2).AddHours(10), EndDateTime = DateTime.Now.AddDays(2).AddHours(12), HallId = 3, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(2).AddHours(14), EndDateTime = DateTime.Now.AddDays(2).AddHours(16), HallId = 4, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(3).AddHours(9), EndDateTime = DateTime.Now.AddDays(3).AddHours(11), HallId = 5, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(3).AddHours(12), EndDateTime = DateTime.Now.AddDays(3).AddHours(14), HallId = 1, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(4).AddHours(10), EndDateTime = DateTime.Now.AddDays(4).AddHours(12), HallId = 2, AICUserId = demoUser.Id },  
-                new Booking { StartDateTime = DateTime.Now.AddDays(4).AddHours(13), EndDateTime = DateTime.Now.AddDays(4).AddHours(15), HallId = 3, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(5).AddHours(9), EndDateTime = DateTime.Now.AddDays(5).AddHours(11), HallId = 4, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(5).AddHours(12), EndDateTime = DateTime.Now.AddDays(5).AddHours(14), HallId = 5, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(6).AddHours(10), EndDateTime = DateTime.Now.AddDays(6).AddHours(12), HallId = 1, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(6).AddHours(13), EndDateTime = DateTime.Now.AddDays(6).AddHours(15), HallId = 2, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(7).AddHours(9), EndDateTime = DateTime.Now.AddDays(7).AddHours(11), HallId = 3, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(7).AddHours(12), EndDateTime = DateTime.Now.AddDays(7).AddHours(14), HallId = 4, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(8).AddHours(10), EndDateTime = DateTime.Now.AddDays(8).AddHours(12), HallId = 5, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(8).AddHours(14), EndDateTime = DateTime.Now.AddDays(8).AddHours(16), HallId = 1, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(9).AddHours(9), EndDateTime = DateTime.Now.AddDays(9).AddHours(11), HallId = 2, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(9).AddHours(13), EndDateTime = DateTime.Now.AddDays(9).AddHours(15), HallId = 3, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(10).AddHours(10), EndDateTime = DateTime.Now.AddDays(10).AddHours(12), HallId = 4, AICUserId = demoUser.Id },
-                new Booking { StartDateTime = DateTime.Now.AddDays(10).AddHours(14), EndDateTime = DateTime.Now.AddDays(10).AddHours(16), HallId = 5, AICUserId = demoUser.Id }
-            };
+                if (!context.Class.Any())
+                {
+                    var teacherIds = context.Teachers.Select(t => t.TeacherId).ToList();
+                    if (teacherIds.Count >= 5)
+                    {
+                        var classes = new List<Class>
+                        {
+                            new Class { ClassName = "Beginners Quran", Description = "Introductory Quran reading and basics for young learners.", CurrentStudents = 6, TeacherId = teacherIds[0] },
+                            new Class { ClassName = "Intermediate Tajweed", Description = "Improve recitation with tajweed rules and practice.", CurrentStudents = 8, TeacherId = teacherIds[1] },
+                            new Class { ClassName = "Hifz Preparation", Description = "Memorisation techniques and guided memorisation sessions.", CurrentStudents = 5, TeacherId = teacherIds[2] },
+                            new Class { ClassName = "Youth Studies", Description = "Islamic studies for youth with interactive lessons.", CurrentStudents = 10, TeacherId = teacherIds[3] },
+                            new Class { ClassName = "Adults Class", Description = "Evening class for adult learners focusing on study and reflection.", CurrentStudents = 7, TeacherId = teacherIds[4] }
+                        };
+                        context.Class.AddRange(classes);
+                        await context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Classes: " + ex.Message);
+            }
 
-            context.Booking.AddRange(bookings);
-            context.SaveChanges();
+            // Seed Students (20)
+            try
+            {
+                if (!context.Students.Any())
+                {
+                    var classIds = context.Class.Select(c => c.ClassId).ToList();
+                    var teacherIds = context.Teachers.Select(t => t.TeacherId).ToList();
+                    var guardianNames = new[] { "Ahmad", "Leila", "Fatima", "Omar", "Hassan", "Sara", "Ibrahim", "Zara", "Hana", "Yusuf", "Amina", "Bilal", "Rania", "Karim", "Mona", "Rashid", "Nadia", "Samir", "Yara", "Zain" };
+                    var studentFirst = new[] { "Adam", "Bella", "Cyrus", "Dina", "Elias", "Farah", "Gabe", "Huda", "Ilan", "Jana", "Kian", "Lina", "MayaS", "Noor", "OmarS", "Pia", "Qasim", "Rima", "Sami", "Tala" };
+                    var studentLast = new[] { "Jones", "Smith", "Lee", "Wong", "Clark", "Evans", "Adams", "Baker", "Carter", "Dawson", "Ellis", "Foster", "Graham", "Hayes", "Ibrahim", "Jensen", "Khan", "Lopez", "Martin", "Nguyen" };
+
+                    var students = new List<Student>();
+                    for (int i = 0; i < 20; i++)
+                    {
+                        // generate a phone matching +64 21-xxx-xxxx
+                        var local = 200 + (i % 700); // 3-digit
+                        var subs = 1000 + i; // 4-digit
+                        var phone = $"+64 21-{local:D3}-{subs:D4}";
+
+                        students.Add(new Student
+                        {
+                            GuardianFirstName = guardianNames[i],
+                            GuardianLastName = "Family",
+                            FirstName = studentFirst[i],
+                            LastName = studentLast[i],
+                            Email = $"student{i+1}@example.com",
+                            PhoneNumber = phone,
+                            Gender = (i % 2 == 0) ? "Male" : "Female",
+                            Ethnicity = (i % 3 == 0) ? "Pacific" : "Asian",
+                            QuranNazira = (i % 4 == 0) ? "Advanced" : "Basic",
+                            QuranHifz = (i % 5 == 0) ? "Partial" : "None",
+                            Address = $"{i + 1} Example Street",
+                            DateOfBirth = DateTime.Today.AddYears(-8).AddDays(i),
+                            ClassId = classIds.Count > 0 ? classIds[i % classIds.Count] : 1,
+                            TeacherId = teacherIds.Count > 0 ? teacherIds[i % teacherIds.Count] : 1
+                        });
+                    }
+                    context.Students.AddRange(students);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Students: " + ex.Message);
+            }
+
+            // Seed Notices (20)
+            try
+            {
+                if (!context.Notices.Any())
+                {
+                    var userIdForNotices = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    var notices = Enumerable.Range(1, 20).Select(i => new Notice
+                    {
+                        Title = $"Community Update {i}",
+                        Message = $"This is community announcement number {i} with details to inform members.",
+                        PostedAt = DateTime.Now.AddDays(-i),
+                        UpdatedAt = null,
+                        AICUserId = userIdForNotices
+                    }).ToList();
+                    context.Notices.AddRange(notices);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Notices: " + ex.Message);
+            }
+
+            // Seed Donations (20)
+            try
+            {
+                if (!context.Donations.Any())
+                {
+                    var userIdForDonations = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    var donations = Enumerable.Range(1, 20).Select(i => new Donation
+                    {
+                        Amount = 10 + i,
+                        DateDonated = DateTime.Now.AddDays(-i),
+                        DonorName = $"Supporter{i}",
+                        DonationType = (i % 2 == 0) ? "General" : "Event",
+                        PaymentMethod = (i % 3 == 0) ? "Cash" : "Card",
+                        Description = $"Donation for cause number {i}",
+                        AICUserId = userIdForDonations
+                    }).ToList();
+                    context.Donations.AddRange(donations);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Donations: " + ex.Message);
+            }
+
+            // Seed Bookings (20)
+            try
+            {
+                if (!context.Booking.Any())
+                {
+                    var hallIds = context.Hall.Select(h => h.HallId).ToList();
+                    var userIdForBookings = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    var bookings = new List<Booking>();
+                    for (int i = 1; i <= 20; i++)
+                    {
+                        bookings.Add(new Booking
+                        {
+                            StartDateTime = DateTime.Today.AddDays(i % 7).AddHours(9 + (i % 6)),
+                            EndDateTime = DateTime.Today.AddDays(i % 7).AddHours(10 + (i % 6)),
+                            HallId = hallIds.Count > 0 ? hallIds[(i - 1) % hallIds.Count] : 1,
+                            AICUserId = userIdForBookings
+                        });
+                    }
+                    context.Booking.AddRange(bookings);
+                    await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error seeding Bookings: " + ex.Message);
+            }
         }
     }
 }
