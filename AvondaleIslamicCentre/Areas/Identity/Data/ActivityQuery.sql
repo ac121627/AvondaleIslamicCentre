@@ -1,0 +1,1 @@
+﻿select * from Hall where name = 'Activity Studio';

@@ -53,7 +53,7 @@ namespace AvondaleIslamicCentre.Controllers
             return View(await PaginatedList<Donation>.CreateAsync(donations.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
-        [Authorize]
+        /*[Authorize]
 
         public async Task<IActionResult> ViewDonations()
         {
@@ -65,7 +65,7 @@ namespace AvondaleIslamicCentre.Controllers
             .ToListAsync();
 
             return View(donations);
-        }
+        }*/
 
         // GET: Donations/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -31,9 +31,6 @@
             <th>
                 @Html.DisplayNameFor(model => model[0].Hall)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].AICUser)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,9 +46,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Hall.Name)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AICUser.Id)
-            </td>
+          
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-edit btn-sm">Edit</a>
                 <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-details btn-sm ms-1">Details</a>

@@ -23,7 +23,7 @@ namespace AvondaleIslamicCentre.Models
         [Required]
         [ForeignKey("HallId")]
         public int HallId { get; set; }
-        public Hall? Hall { get; set; } = new Hall(); // Navigation property to Hall
+        public Hall? Hall { get; set; } // Navigation property to Hall
 
         [Required]
         public string AICUserId { get; set; } = string.Empty; // Default value to ensure it is not null

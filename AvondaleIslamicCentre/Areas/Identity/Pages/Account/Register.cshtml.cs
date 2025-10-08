@@ -125,7 +125,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.LastName = Input.LastName;
-                    user.FirstName = Input.FirstName;
+                user.FirstName = Input.FirstName;
                 user.Phone = Input.Phone;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -135,6 +135,20 @@ namespace AvondaleIslamicCentre.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // Add newly registered user to 'Member' role
+                    try
+                    {
+                        var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+                        if (!roleResult.Succeeded)
+                        {
+                            _logger.LogWarning("Failed to add user to 'Member' role: {Errors}", string.Join(';', roleResult.Errors.Select(e => e.Description)));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Exception while assigning 'Member' role to new user.");
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

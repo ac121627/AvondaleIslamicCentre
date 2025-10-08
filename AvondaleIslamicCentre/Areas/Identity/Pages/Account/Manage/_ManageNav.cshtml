@@ -2,7 +2,35 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
+
+<style>
+    /* Local styles for Manage navigation to match site green theme */
+    .manage-nav .nav-link {
+        color: #2d7034; /* site green */
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .manage-nav .nav-link:hover {
+        background-color: #2d7034;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(45,112,52,0.12);
+    }
+
+    .manage-nav .nav-link.active {
+        background-color: #2d7034;
+        color: #ffffff !important;
+        font-weight: 600;
+    }
+
+    /* Ensure vertical spacing when stacked */
+    .manage-nav .nav-item { margin-bottom: 0.5rem; }
+</style>
+
+<ul class="nav nav-pills flex-column manage-nav">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>

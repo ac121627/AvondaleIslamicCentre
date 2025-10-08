@@ -97,7 +97,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Admin user not available; seeding of user-owned records will use member user or skip.");
             }
 
-            // Seed Halls (4) - valid names and capacities
+           
             try
             {
                 if (!context.Hall.Any())
