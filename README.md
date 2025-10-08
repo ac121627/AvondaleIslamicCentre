@@ -9,7 +9,7 @@ This project is designed to support the Centre’s daily operations — includin
 
 - **Authentication & Authorization**
   - ASP.NET Core Identity integration
-  - Role-based access (Admin, Teacher, Member)
+  - Role-based access (Admin & Member)
 
 - **Bookings Management**
   - Reserve halls with start and end times
@@ -30,12 +30,8 @@ This project is designed to support the Centre’s daily operations — includin
   - Post announcements to the community
   - Track created/updated times and users
 
-- **Reports**
-  - Submit and track internal reports
-  - Link reports to users
-
 - **Halls**
-  - Manage hall information (name, capacity, availability)
+  - Manage hall information (name, capacity)
 
 - **Sorting, Filtering & Pagination**
   - Search records (e.g., by name, title, or description)
