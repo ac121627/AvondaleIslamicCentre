@@ -5,6 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AvondaleIslamicCentre.Models
 {
+    public enum DonationType
+    {
+        [Display(Name = "Sadaqah")] Sadaqah,
+        [Display(Name = "Zakat")] Zakat,
+        [Display(Name = "Masjid Donation")] Masjid_Donation,
+        [Display(Name = "Madrasah Donation")] Madrasah_Donation,
+        [Display(Name = "Palestine")] Palestine,
+    }
+
+    public enum PaymentMethod
+    {
+        [Display(Name = "Cash")] Cash,
+        [Display(Name = "Card")] Card
+    }
     public class Donation
     {
         [Key]
@@ -16,27 +30,22 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Display(Name = "Date Donated")]
-        public DateTime DateDonated { get; set; }
-
-        [StringLength(100, ErrorMessage = "Donor name must be under 100 characters.")]
-        [Display(Name = "Donor Name")]
-        public string? DonorName { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime DateDonated { get; set; } = DateTime.Now;
 
         [Required]
         [Display(Name = "Donation Type")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Donation type must be 3 to 100 characters.")]
-        public string? DonationType { get; set; }
+        public DonationType DonationType { get; set; }
 
         [Required]
         [Display(Name = "Payment Method")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "Payment method must be 3 to 50 characters.")]
-        public string? PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         [StringLength(500, ErrorMessage = "Description must not exceed 500 characters.")]
         public string? Description { get; set; }
 
         [Required]
-        [StringLength(450, ErrorMessage = "User ID is invalid.")]
+        [Display(Name = "Username")]
         public string? AICUserId { get; set; }
         [ForeignKey("AICUserId")]
         public AICUser? AICUser { get; set; } // Navigation property

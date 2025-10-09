@@ -19,7 +19,7 @@ public class AICUser : IdentityUser
     [MinLength(2)]
     [MaxLength(50)]
     [Display(Name = "First Name")]
-    public string FirstName { get; set; } = string.Empty;
+    public string FirstName { get; set; } 
 
     [Required(ErrorMessage = "Please provide a valid Last Name.")]
     [PersonalData] // Marks this property as personal data for GDPR purposes
@@ -28,18 +28,18 @@ public class AICUser : IdentityUser
     [MinLength(2)]
     [MaxLength(50)]
     [Display(Name = "Last Name")]
-    public string LastName { get; set; } = string.Empty;
+    public string LastName { get; set; } 
 
     [Required, Display(Name ="Phone Number")]
     [DataType(DataType.PhoneNumber), MaxLength(17)]
     [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
-ErrorMessage = "Phone Number is not valid.\n\n" +
-               "For New Zealand:\n" +
+    ErrorMessage = "Phone Number is not valid.\n\n" +
+               "In New Zealand:\n" +
                "+64 followed by a 2-digit area code (20-26),\n" +
                "a 3- or 4-digit local number,\n" +
                "and a 4- or 5-digit subscriber number.\n" +
                "(e.g., +64 20-345-6789 or +64 22-1234-5678).")]    
-    public string Phone { get; set; } = string.Empty;
+    public string Phone { get; set; } 
 
     public ICollection<Booking> Booking { get; set; } = new List<Booking>(); // Navigation property to Booking
 

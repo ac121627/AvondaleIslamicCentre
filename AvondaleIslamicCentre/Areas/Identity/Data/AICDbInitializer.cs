@@ -104,10 +104,10 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 {
                     var halls = new List<Hall>
                     {
-                        new Hall { Name = "Auditorium", Capacity = 150 },
-                        new Hall { Name = "Multipurpose Room", Capacity = 60 },
-                        new Hall { Name = "Lecture Theatre", Capacity = 80 },
-                        new Hall { Name = "Activity Studio", Capacity = 30 }
+                        new Hall { Name = "Men's Main Hall", Capacity = 200 },
+                        new Hall { Name = "Men's Back Hall", Capacity = 250 },
+                        new Hall { Name = "Ladies Main Hall", Capacity = 100 },
+                        new Hall { Name = "Ladies Small Hall", Capacity = 50 }
                     };
                     context.Hall.AddRange(halls);
                     await context.SaveChangesAsync();
@@ -151,11 +151,11 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     {
                         var classes = new List<Class>
                         {
-                            new Class { ClassName = "Beginners Quran", Description = "Introductory Quran reading and basics for young learners.", CurrentStudents = 6, TeacherId = teacherIds[0] },
-                            new Class { ClassName = "Intermediate Tajweed", Description = "Improve recitation with tajweed rules and practice.", CurrentStudents = 8, TeacherId = teacherIds[1] },
-                            new Class { ClassName = "Hifz Preparation", Description = "Memorisation techniques and guided memorisation sessions.", CurrentStudents = 5, TeacherId = teacherIds[2] },
-                            new Class { ClassName = "Youth Studies", Description = "Islamic studies for youth with interactive lessons.", CurrentStudents = 10, TeacherId = teacherIds[3] },
-                            new Class { ClassName = "Adults Class", Description = "Evening class for adult learners focusing on study and reflection.", CurrentStudents = 7, TeacherId = teacherIds[4] }
+                            new Class { ClassName = "Hifz Class", Description = "Memorization of the Holy Quran", CurrentStudents = 6, TeacherId = teacherIds[0] },
+                            new Class { ClassName = "Grade 7", Description = "Year / Grade 7.", CurrentStudents = 3, TeacherId = teacherIds[1] },
+                            new Class { ClassName = "Grade 6", Description = "Year / Grade 6.", CurrentStudents = 10, TeacherId = teacherIds[2] },
+                            new Class { ClassName = "Grade 5", Description = "Year / Grade 5.", CurrentStudents = 15, TeacherId = teacherIds[3] },
+                            new Class { ClassName = "Grade 3", Description = "Year / Grade 3.", CurrentStudents = 20, TeacherId = teacherIds[4] }
                         };
                         context.Class.AddRange(classes);
                         await context.SaveChangesAsync();
@@ -194,10 +194,10 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                             LastName = studentLast[i],
                             Email = $"student{i+1}@example.com",
                             PhoneNumber = phone,
-                            Gender = (i % 2 == 0) ? "Male" : "Female",
-                            Ethnicity = (i % 3 == 0) ? "Pacific" : "Asian",
-                            QuranNazira = (i % 4 == 0) ? "Advanced" : "Basic",
-                            QuranHifz = (i % 5 == 0) ? "Partial" : "None",
+                            Gender = (i % 2 == 0) ? Gender.Male : Gender.Female,
+                            Ethnicity = (Ethnicity)(i % Enum.GetValues(typeof(Ethnicity)).Length),
+                            QuranNazira = (QuranLevel)(i % Enum.GetValues(typeof(QuranLevel)).Length),
+                            QuranHifz = (QuranLevel)((i + 1) % Enum.GetValues(typeof(QuranLevel)).Length),
                             Address = $"{i + 1} Example Street",
                             DateOfBirth = DateTime.Today.AddYears(-8).AddDays(i),
                             ClassId = classIds.Count > 0 ? classIds[i % classIds.Count] : 1,
@@ -224,7 +224,6 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                         Title = $"Community Update {i}",
                         Message = $"This is community announcement number {i} with details to inform members.",
                         PostedAt = DateTime.Now.AddDays(-i),
-                        UpdatedAt = null,
                         AICUserId = userIdForNotices
                     }).ToList();
                     context.Notices.AddRange(notices);
@@ -246,9 +245,8 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     {
                         Amount = 10 + i,
                         DateDonated = DateTime.Now.AddDays(-i),
-                        DonorName = $"Supporter{i}",
-                        DonationType = (i % 2 == 0) ? "General" : "Event",
-                        PaymentMethod = (i % 3 == 0) ? "Cash" : "Card",
+                        DonationType = (DonationType)(i % Enum.GetValues(typeof(DonationType)).Length),
+                        PaymentMethod = (PaymentMethod)(i % Enum.GetValues(typeof(PaymentMethod)).Length),
                         Description = $"Donation for cause number {i}",
                         AICUserId = userIdForDonations
                     }).ToList();

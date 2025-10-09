@@ -21,14 +21,16 @@ namespace AvondaleIslamicCentre.Models
         public DateTime EndDateTime { get; set; } 
 
         [Required]
-        [ForeignKey("HallId")]
+        [Display(Name ="Hall")]
         public int HallId { get; set; }
-        public Hall? Hall { get; set; } // Navigation property to Hall
+        [ForeignKey("HallId")]
+        public Hall Hall { get; set; } // Navigation property to Hall
 
         [Required]
-        public string AICUserId { get; set; } = string.Empty; // Default value to ensure it is not null
+        [Display(Name = "Username")]
+        public string AICUserId { get; set; }// Default value to ensure it is not null
         [ForeignKey("AICUserId")]
-        public AICUser? AICUser { get; set; } = new AICUser(); // Navigation property to AICUser
+        public AICUser AICUser { get; set; }  // Navigation property to AICUser
 
     }
 } 

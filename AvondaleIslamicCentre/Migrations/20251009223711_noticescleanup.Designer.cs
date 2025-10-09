@@ -4,6 +4,7 @@ using AvondaleIslamicCentre.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvondaleIslamicCentre.Migrations
 {
     [DbContext(typeof(AICDbContext))]
-    partial class AICDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251009223711_noticescleanup")]
+    partial class noticescleanup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,6 +190,11 @@ namespace AvondaleIslamicCentre.Migrations
 
                     b.Property<int>("DonationType")
                         .HasColumnType("int");
+
+                    b.Property<string>("DonorName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");

@@ -4,6 +4,7 @@ using AvondaleIslamicCentre.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvondaleIslamicCentre.Migrations
 {
     [DbContext(typeof(AICDbContext))]
-    partial class AICDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251008052737_fixGender")]
+    partial class fixGender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,11 +188,19 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("DonationType")
-                        .HasColumnType("int");
+                    b.Property<string>("DonationType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                    b.Property<string>("DonorName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("DonationId");
 
@@ -244,6 +255,9 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("NoticeId");
 
                     b.HasIndex("AICUserId");
@@ -275,8 +289,10 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Ethnicity")
-                        .HasColumnType("int");
+                    b.Property<string>("Ethnicity")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -306,11 +322,15 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(17)
                         .HasColumnType("nvarchar(17)");
 
-                    b.Property<int>("QuranHifz")
-                        .HasColumnType("int");
+                    b.Property<string>("QuranHifz")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("QuranNazira")
-                        .HasColumnType("int");
+                    b.Property<string>("QuranNazira")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");

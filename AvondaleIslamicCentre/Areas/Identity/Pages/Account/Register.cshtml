@@ -7,7 +7,7 @@
 <div class="auth-card">
     <div class="auth-left">
         <h2>Welcome to Avondale Islamic Centre</h2>
-        <p>Join our community to manage bookings, reports and more. Secure and easy registration.</p>
+        <p>Join our community to manage bookings, donations and more. Secure and easy registration.</p>
         <div>
             <p class="small-muted">Already have an account?</p>
             <a asp-page="/Account/Login" class="btn btn-outline-light">Sign in</a>
@@ -68,24 +68,7 @@
         </form>
 
         <hr />
-        <div class="small-muted">Sign up using a third-party service</div>
-        <div class="social-buttons mt-2">
-            @if ((Model.ExternalLogins?.Count ?? 0) == 0)
-            {
-                <div class="small-muted mt-2">No external authentication providers configured.</div>
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        @foreach (var provider in Model.ExternalLogins!)
-                        {
-                            <button type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name">@provider.DisplayName</button>
-                        }
-                    </div>
-                </form>
-            }
-        </div>
+
     </div>
 </div>
 

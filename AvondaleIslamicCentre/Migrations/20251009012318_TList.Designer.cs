@@ -4,6 +4,7 @@ using AvondaleIslamicCentre.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvondaleIslamicCentre.Migrations
 {
     [DbContext(typeof(AICDbContext))]
-    partial class AICDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251009012318_TList")]
+    partial class TList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,6 +191,10 @@ namespace AvondaleIslamicCentre.Migrations
                     b.Property<int>("DonationType")
                         .HasColumnType("int");
 
+                    b.Property<string>("DonorName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
@@ -244,6 +251,9 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("NoticeId");
 
                     b.HasIndex("AICUserId");
@@ -276,6 +286,7 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Ethnicity")
+                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
@@ -307,9 +318,11 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasColumnType("nvarchar(17)");
 
                     b.Property<int>("QuranHifz")
+                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     b.Property<int>("QuranNazira")
+                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     b.Property<int>("TeacherId")

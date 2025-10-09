@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace AvondaleIslamicCentre.Controllers
 {
@@ -17,10 +18,12 @@ namespace AvondaleIslamicCentre.Controllers
     {
         private readonly AICDbContext _context;
         private const int PageSize = 10;
+        private readonly UserManager<AICUser> _userManager;
 
-        public BookingsController(AICDbContext context)
+        public BookingsController(AICDbContext context, UserManager<AICUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Bookings
@@ -32,6 +35,13 @@ namespace AvondaleIslamicCentre.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var bookings = _context.Booking.Include(b => b.AICUser).Include(b => b.Hall).AsQueryable();
+
+            // If user is a Member, only show their own bookings
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                bookings = bookings.Where(b => b.AICUserId == currentUserId);
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -91,12 +101,19 @@ namespace AvondaleIslamicCentre.Controllers
                 booking.AICUserId = userId ?? string.Empty;
             }
 
-            if (ModelState.IsValid)
+            // If current user is Member, force owner to be current user
+            if (User.IsInRole("Member"))
+            {
+                booking.AICUserId = _userManager.GetUserId(User);
+            }
+
+            if (!ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
             ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
             return View(booking);
@@ -132,7 +149,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

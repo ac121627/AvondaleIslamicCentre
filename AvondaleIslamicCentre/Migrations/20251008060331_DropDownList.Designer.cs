@@ -4,6 +4,7 @@ using AvondaleIslamicCentre.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvondaleIslamicCentre.Migrations
 {
     [DbContext(typeof(AICDbContext))]
-    partial class AICDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251008060331_DropDownList")]
+    partial class DropDownList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,11 +188,19 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("DonationType")
-                        .HasColumnType("int");
+                    b.Property<string>("DonationType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
+                    b.Property<string>("DonorName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("DonationId");
 
@@ -244,6 +255,9 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("NoticeId");
 
                     b.HasIndex("AICUserId");
@@ -276,6 +290,7 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Ethnicity")
+                        .HasMaxLength(10)
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
@@ -307,9 +322,11 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasColumnType("nvarchar(17)");
 
                     b.Property<int>("QuranHifz")
+                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     b.Property<int>("QuranNazira")
+                        .HasMaxLength(20)
                         .HasColumnType("int");
 
                     b.Property<int>("TeacherId")

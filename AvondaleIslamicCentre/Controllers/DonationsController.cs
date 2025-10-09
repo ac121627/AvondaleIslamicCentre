@@ -37,9 +37,19 @@ namespace AvondaleIslamicCentre.Controllers
 
             var donations = _context.Donations.Include(d => d.AICUser).AsQueryable();
 
+            // If user is a Member, only show their own donations
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                donations = donations.Where(d => d.AICUserId == currentUserId);
+            }
+
             if (!String.IsNullOrEmpty(searchString))
             {
-                donations = donations.Where(d => (d.DonorName != null && d.DonorName.Contains(searchString)) || (d.Description != null && d.Description.Contains(searchString)));
+                // allow searching by donor name, description, payment method, or donation type
+                donations = donations.Where(d =>
+                    (d.Description != null && d.Description.Contains(searchString))
+                );
             }
 
             donations = sortOrder switch
@@ -52,20 +62,6 @@ namespace AvondaleIslamicCentre.Controllers
 
             return View(await PaginatedList<Donation>.CreateAsync(donations.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
-
-        /*[Authorize]
-
-        public async Task<IActionResult> ViewDonations()
-        {
-            var currentUserId = _userManager.GetUserId(User);
-
-            var donations = await _context.Donations
-            .Where(f => f.AICUserId == currentUserId)
-            .OrderByDescending(f => f.Amount)
-            .ToListAsync();
-
-            return View(donations);
-        }*/
 
         // GET: Donations/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -109,6 +105,20 @@ namespace AvondaleIslamicCentre.Controllers
         {
             if (ModelState.IsValid)
             {
+                // If the current user is a Member, force the donation AICUserId to the current user to prevent spoofing
+                if (User.IsInRole("Member"))
+                {
+                    donation.AICUserId = _userManager.GetUserId(User);
+                }
+                else
+                {
+                    // For Admins: if not supplied, set to current user
+                    if (string.IsNullOrWhiteSpace(donation.AICUserId))
+                    {
+                        donation.AICUserId = _userManager.GetUserId(User);
+                    }
+                }
+
                 _context.Add(donation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
