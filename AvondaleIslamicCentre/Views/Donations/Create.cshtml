@@ -10,17 +10,13 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
                 <input asp-for="Amount" class="form-control" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateDonated" class="control-label"></label>
-                <input asp-for="DateDonated" class="form-control" />
-                <span asp-validation-for="DateDonated" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DonationType" class="control-label"></label>
@@ -39,10 +35,18 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="AICUserId" class="control-label"></label>
-                <select asp-for="AICUserId" class ="form-control" asp-items="ViewBag.AICUserId"></select>
+                <label>Date Donated</label>
+                <input type="text" class="form-control" value="@DateTime.Now.ToString("g")" disabled />
             </div>
+
+            <div class="form-group">
+                <label>Donated By</label>
+                <input type="text" class="form-control" value="@ViewBag.CurrentUserFirstName" disabled />
+                <input type="hidden" name="AICUserId" value="@ViewBag.CurrentUserId" />
+            </div>
+
             <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-create" />
                 <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>

@@ -78,7 +78,7 @@ namespace AvondaleIslamicCentre.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("ClassId,ClassName,Description,CurrentStudents,TeacherId")] Class classItem)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(classItem);
                 await _context.SaveChangesAsync();
@@ -112,7 +112,7 @@ namespace AvondaleIslamicCentre.Controllers
             if (id != classItem.ClassId)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 try
                 {

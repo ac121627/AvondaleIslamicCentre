@@ -76,15 +76,30 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Members may only view their own booking details
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (booking.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
             return View(booking);
         }
 
         // GET: Bookings/Create
         [Authorize(Roles = "Admin,Member")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name");
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName");
+
+            // Provide current user id and first name to the view
+            var currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            ViewBag.CurrentUserFirstName = currentUser?.FirstName ?? currentUser?.UserName ?? "";
+
             return View();
         }
 
@@ -92,20 +107,10 @@ namespace AvondaleIslamicCentre.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Member")]
-        public async Task<IActionResult> Create([Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
+        public async Task<IActionResult> Create([Bind("BookingId,StartDateTime,EndDateTime,HallId")] Booking booking)
         {
-            // If no AICUserId supplied, use current user
-            if (string.IsNullOrWhiteSpace(booking.AICUserId))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                booking.AICUserId = userId ?? string.Empty;
-            }
-
-            // If current user is Member, force owner to be current user
-            if (User.IsInRole("Member"))
-            {
-                booking.AICUserId = _userManager.GetUserId(User);
-            }
+            // Force owner to current user
+            booking.AICUserId = _userManager.GetUserId(User);
 
             if (!ModelState.IsValid)
             {
@@ -115,12 +120,14 @@ namespace AvondaleIslamicCentre.Controllers
             }
 
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
+            var currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            ViewBag.CurrentUserFirstName = currentUser?.FirstName ?? currentUser?.UserName ?? "";
             return View(booking);
         }
 
         // GET: Bookings/Edit/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,25 +135,58 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Booking.FindAsync(id);
+            var booking = await _context.Booking.Include(b => b.AICUser).FirstOrDefaultAsync(b => b.BookingId == id);
             if (booking == null)
             {
                 return NotFound();
             }
+
+            // Members may only edit their own bookings
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (booking.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
+            ViewBag.BookingOwnerFirstName = booking.AICUser?.FirstName ?? (await _userManager.FindByIdAsync(booking.AICUserId))?.FirstName ?? "";
+            ViewBag.BookingOwnerId = booking.AICUserId;
             return View(booking);
         }
 
         // POST: Bookings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("BookingId,StartDateTime,EndDateTime,HallId,AICUserId")] Booking booking)
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> Edit(int id, [Bind("BookingId,StartDateTime,EndDateTime,HallId")] Booking booking)
         {
             if (id != booking.BookingId)
             {
                 return NotFound();
+            }
+
+            // Retrieve existing booking to validate ownership and preserve AICUserId
+            var existing = await _context.Booking.AsNoTracking().FirstOrDefaultAsync(b => b.BookingId == id);
+            if (existing == null) return NotFound();
+
+            // If user is Member, ensure they own the booking and prevent changing owner
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (existing.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+                // Force owner to remain the current user
+                booking.AICUserId = currentUserId;
+            }
+            else
+            {
+                // For Admins, keep existing owner (do not allow change from UI)
+                booking.AICUserId = existing.AICUserId;
             }
 
             if (!ModelState.IsValid)
@@ -170,12 +210,14 @@ namespace AvondaleIslamicCentre.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["HallId"] = new SelectList(_context.Set<Hall>(), "HallId", "Name", booking.HallId);
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", booking.AICUserId);
+            var owner = await _userManager.FindByIdAsync(booking.AICUserId);
+            ViewBag.BookingOwnerFirstName = owner?.FirstName ?? "";
+            ViewBag.BookingOwnerId = booking.AICUserId;
             return View(booking);
         }
 
         // GET: Bookings/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -192,15 +234,33 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Members may only delete their own bookings
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (booking.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
             return View(booking);
         }
 
         // POST: Bookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var existing = await _context.Booking.AsNoTracking().FirstOrDefaultAsync(b => b.BookingId == id);
+            if (existing == null) return NotFound();
+
+            if (User.IsInRole("Member") && existing.AICUserId != _userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
+
             var booking = await _context.Booking.FindAsync(id);
             if (booking != null)
             {

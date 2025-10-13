@@ -31,7 +31,7 @@ namespace AvondaleIslamicCentre.Models
     public enum QuranLevel
     {
         [Display(Name = "Not Started")] Not_Started = 0,
-        [Display(Name = "Juz_Amma")] Juz_Amma = 1,
+        [Display(Name = "Juz Amma")] Juz_Amma = 1,
         [Display(Name = "Juz 1")] Juz_1,
         [Display(Name = "Juz 2")] Juz_2,
         [Display(Name = "Juz 3")] Juz_3,
@@ -115,7 +115,7 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Display(Name = "Student Date of Birth")]
-        [DOBValidator]
+        //[DOBValidator]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; } // Date of birth of the student
 
@@ -150,12 +150,12 @@ namespace AvondaleIslamicCentre.Models
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Class.")]
         [Display(Name = "Class")]
         public int ClassId { get; set; }
-        public Class Class { get; set; } // Navigation property to Class
+        public Class? Class { get; set; } // Navigation property to Class
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Teacher.")]
         [Display(Name = "Teacher")]
         public int TeacherId { get; set; } // Foreign key to Teacher
-        public Teacher Teacher { get; set; } // Navigation property to Teacher
+        public Teacher? Teacher { get; set; } // Navigation property to Teacher
     }
 }

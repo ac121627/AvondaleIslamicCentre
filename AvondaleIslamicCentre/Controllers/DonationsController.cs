@@ -46,10 +46,24 @@ namespace AvondaleIslamicCentre.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                // allow searching by donor name, description, payment method, or donation type
-                donations = donations.Where(d =>
-                    (d.Description != null && d.Description.Contains(searchString))
-                );
+                var s = searchString.Trim();
+
+                // match description text
+                IQueryable<Donation> filtered = donations.Where(d => d.Description != null && d.Description.Contains(s));
+
+                // try parse DonationType
+                if (Enum.TryParse<DonationType>(s, true, out var dt))
+                {
+                    filtered = filtered.Union(donations.Where(d => d.DonationType == dt));
+                }
+
+                // try parse PaymentMethod
+                if (Enum.TryParse<PaymentMethod>(s, true, out var pm))
+                {
+                    filtered = filtered.Union(donations.Where(d => d.PaymentMethod == pm));
+                }
+
+                donations = filtered;
             }
 
             donations = sortOrder switch
@@ -66,12 +80,6 @@ namespace AvondaleIslamicCentre.Controllers
         // GET: Donations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            // Members should not see donation details
-            if (User.IsInRole("Member"))
-            {
-                return Forbid();
-            }
-
             if (id == null)
             {
                 return NotFound();
@@ -85,15 +93,28 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Members may only view their own donation details
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (donation.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
             return View(donation);
         }
 
         // GET: Donations/Create
         [Authorize(Roles = "Admin,Member")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // populate AICUser select for frontend
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName");
+            var currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            ViewBag.CurrentUserFirstName = currentUser?.FirstName ?? currentUser?.UserName ?? "";
+
             return View();
         }
 
@@ -101,34 +122,27 @@ namespace AvondaleIslamicCentre.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Member")]
-        public async Task<IActionResult> Create([Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
+        public async Task<IActionResult> Create([Bind("DonationId,Amount,DonationType,PaymentMethod,Description")] Donation donation)
         {
-            if (ModelState.IsValid)
-            {
-                // If the current user is a Member, force the donation AICUserId to the current user to prevent spoofing
-                if (User.IsInRole("Member"))
-                {
-                    donation.AICUserId = _userManager.GetUserId(User);
-                }
-                else
-                {
-                    // For Admins: if not supplied, set to current user
-                    if (string.IsNullOrWhiteSpace(donation.AICUserId))
-                    {
-                        donation.AICUserId = _userManager.GetUserId(User);
-                    }
-                }
+            // Force DateDonated to now and owner to current user
+            donation.DateDonated = DateTime.Now;
+            donation.AICUserId = _userManager.GetUserId(User);
 
+            if (!ModelState.IsValid)
+            {
                 _context.Add(donation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", donation.AICUserId);
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            ViewBag.CurrentUserFirstName = currentUser?.FirstName ?? currentUser?.UserName ?? "";
             return View(donation);
         }
 
         // GET: Donations/Edit/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -136,27 +150,53 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            var donation = await _context.Donations.FindAsync(id);
+            var donation = await _context.Donations.Include(d => d.AICUser).FirstOrDefaultAsync(d => d.DonationId == id);
             if (donation == null)
             {
                 return NotFound();
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", donation.AICUserId);
+
+            // Members may only edit their own donations
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (donation.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
+            ViewBag.DonationOwnerFirstName = donation.AICUser?.FirstName ?? (await _userManager.FindByIdAsync(donation.AICUserId))?.FirstName ?? "";
+            ViewBag.DonationOwnerId = donation.AICUserId;
+
             return View(donation);
         }
 
         // POST: Donations/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("DonationId,Amount,DateDonated,DonorName,DonationType,PaymentMethod,Description,AICUserId")] Donation donation)
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> Edit(int id, [Bind("DonationId,Amount,DonationType,PaymentMethod,Description")] Donation donation)
         {
             if (id != donation.DonationId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var existing = await _context.Donations.AsNoTracking().FirstOrDefaultAsync(d => d.DonationId == id);
+            if (existing == null) return NotFound();
+
+            // Preserve fields that cannot be changed
+            donation.DateDonated = existing.DateDonated;
+            donation.AICUserId = existing.AICUserId;
+
+            // Members cannot change owner; check ownership
+            if (User.IsInRole("Member") && existing.AICUserId != _userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
+
+            if (!ModelState.IsValid)
             {
                 try
                 {
@@ -176,12 +216,14 @@ namespace AvondaleIslamicCentre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AICUserId"] = new SelectList(_context.Users, "Id", "UserName", donation.AICUserId);
+
+            ViewBag.DonationOwnerFirstName = (await _userManager.FindByIdAsync(donation.AICUserId))?.FirstName ?? "";
+            ViewBag.DonationOwnerId = donation.AICUserId;
             return View(donation);
         }
 
         // GET: Donations/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -197,15 +239,33 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Members may only delete their own donations
+            if (User.IsInRole("Member"))
+            {
+                var currentUserId = _userManager.GetUserId(User);
+                if (donation.AICUserId != currentUserId)
+                {
+                    return Forbid();
+                }
+            }
+
             return View(donation);
         }
 
         // POST: Donations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var existing = await _context.Donations.AsNoTracking().FirstOrDefaultAsync(d => d.DonationId == id);
+            if (existing == null) return NotFound();
+
+            if (User.IsInRole("Member") && existing.AICUserId != _userManager.GetUserId(User))
+            {
+                return Forbid();
+            }
+
             var donation = await _context.Donations.FindAsync(id);
             if (donation != null)
             {

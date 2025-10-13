@@ -1,0 +1,1 @@
+﻿SELECT AVG(Capacity) AS AverageCapacity FROM Hall;

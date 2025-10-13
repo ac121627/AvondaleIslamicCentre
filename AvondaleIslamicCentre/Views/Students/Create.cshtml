@@ -67,9 +67,22 @@
 
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth" class="form-control" type="date" id="dobField" />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const dobField = document.getElementById("dobField");
+                    const today = new Date();
+                    const minDate = new Date(today.getFullYear() - 20, today.getMonth(), today.getDate());
+                    const maxDate = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+
+                    dobField.min = minDate.toISOString().split('T')[0];
+                    dobField.max = maxDate.toISOString().split('T')[0];
+                });
+            </script>
+
             <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
                 <input asp-for="Address" class="form-control" />

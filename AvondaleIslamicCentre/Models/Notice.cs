@@ -24,8 +24,8 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Display(Name = "Username")]
-        public string AICUserId { get; set; } // FK to the user who posted it
+        public string? AICUserId { get; set; } // FK to the user who posted it
         [ForeignKey("AICUserId")]
-        public AICUser AICUser { get; set; } // Navigation to user who posted it
+        public AICUser? AICUser { get; set; } // Navigation to user who posted it
     }
 }
