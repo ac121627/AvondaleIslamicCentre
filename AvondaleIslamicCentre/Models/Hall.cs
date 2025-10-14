@@ -17,7 +17,6 @@ namespace AvondaleIslamicCentre.Models
         [Range(10, 200, ErrorMessage = "Capacity must be between 10 and 200.")]
         public int Capacity { get; set; } // Maximum number of people the hall can accommodate
 
-        [Required]
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>(); // Navigation property to Booking, representing all bookings for this hall
+        public ICollection<Booking>? Bookings { get; set; } = new List<Booking>(); // Navigation property to Booking, may be null
     }
 }

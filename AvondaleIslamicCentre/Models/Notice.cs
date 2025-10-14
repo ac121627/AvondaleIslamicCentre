@@ -22,10 +22,9 @@ namespace AvondaleIslamicCentre.Models
         [DataType(DataType.Date)]
         public DateTime PostedAt { get; set; } = DateTime.Now; // When the notice was posted
 
-        [Required]
         [Display(Name = "Username")]
-        public string? AICUserId { get; set; } // FK to the user who posted it
+        public string? AICUserId { get; set; } // FK to the user who posted it (nullable)
         [ForeignKey("AICUserId")]
-        public AICUser? AICUser { get; set; } // Navigation to user who posted it
+        public AICUser? AICUser { get; set; } // Navigation to user who posted it (nullable)
     }
 }

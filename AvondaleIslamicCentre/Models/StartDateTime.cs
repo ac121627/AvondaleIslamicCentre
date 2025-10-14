@@ -24,11 +24,11 @@ public class StartDateTime : ValidationAttribute
 
             // 3️⃣ Time validation (6 AM – 11 PM)
             var earliest = new TimeSpan(6, 0, 0);   // 6:00 AM
-            var latest = new TimeSpan(23, 0, 0);    // 11:00 PM
+            var latest = new TimeSpan(19, 0, 0);    // 11:00 PM
 
             if (startDate.TimeOfDay < earliest || startDate.TimeOfDay > latest)
             {
-                return new ValidationResult("Bookings can only start between 6:00 AM and 11:00 PM.");
+                return new ValidationResult("Bookings can only start between 6:00 AM and 7:00 PM.");
             }
 
             return ValidationResult.Success;

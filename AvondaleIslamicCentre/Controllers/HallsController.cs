@@ -31,6 +31,7 @@ namespace AvondaleIslamicCentre.Controllers
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CapacitySortParm"] = sortOrder == "capacity" ? "capacity_desc" : "capacity";
             ViewData["CurrentFilter"] = searchString;
 
             var halls = from h in _context.Hall select h;
@@ -43,6 +44,8 @@ namespace AvondaleIslamicCentre.Controllers
             halls = sortOrder switch
             {
                 "name_desc" => halls.OrderByDescending(h => h.Name),
+                "capacity" => halls.OrderBy(h => h.Capacity),
+                "capacity_desc" => halls.OrderByDescending(h => h.Capacity),
                 _ => halls.OrderBy(h => h.Name),
             };
 

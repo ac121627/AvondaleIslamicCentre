@@ -63,6 +63,10 @@ namespace AvondaleIslamicCentre.Controllers
                     filtered = filtered.Union(donations.Where(d => d.PaymentMethod == pm));
                 }
 
+                // search by donor username or first/last name
+                filtered = filtered.Union(donations.Where(d => d.AICUserId != null && d.AICUserId.Contains(s)));
+                filtered = filtered.Union(donations.Where(d => d.AICUser != null && (d.AICUser.FirstName.Contains(s) || d.AICUser.LastName.Contains(s))));
+
                 donations = filtered;
             }
 
@@ -128,7 +132,7 @@ namespace AvondaleIslamicCentre.Controllers
             donation.DateDonated = DateTime.Now;
             donation.AICUserId = _userManager.GetUserId(User);
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(donation);
                 await _context.SaveChangesAsync();
@@ -196,7 +200,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return Forbid();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

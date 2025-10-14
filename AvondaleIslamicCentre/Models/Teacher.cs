@@ -37,8 +37,8 @@ namespace AvondaleIslamicCentre.Models
                "(e.g., +64 20-345-6789 or +64 22-1234-5678).")]
         public string PhoneNumber { get; set; }  // Phone number of the guardian
 
-        public ICollection<Class> Classes { get; set; } = new List<Class>();// Navigation property to Class   
+        public ICollection<Class>? Classes { get; set; } = new List<Class>(); // Navigation property to Class   
 
-        public ICollection<Student> Students { get; set; } = new List<Student>(); // Navigation property to multiple Students
+        public ICollection<Student>? Students { get; set; } = new List<Student>(); // Navigation property to multiple Students
     }
 }

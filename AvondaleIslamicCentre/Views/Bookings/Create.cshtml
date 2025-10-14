@@ -1,102 +1,67 @@
 ﻿@model AvondaleIslamicCentre.Models.Booking
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Booking";
+
+    /*var now = DateTime.Now;
+    var minStart = new DateTime(now.Year, now.Month, now.Day, 6, 0, 0); // 6:00 AM today
+    var maxStart = now.AddMonths(2).Date.AddHours(23); // 11:00 PM, 2 months from now*/
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white text-center">
+                    <h4 class="mb-0 text-white">Create Booking</h4>
+                </div>
 
-<h4>Booking</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StartDateTime" class="control-label"></label>
-                <input asp-for="StartDateTime" type="datetime-local" class="form-control" id="startTime" />
-                <span asp-validation-for="StartDateTime" class="text-danger"></span>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Start DateTime -->
+                        <div class="form-group">
+                            <label asp-for="StartDateTime" class="control-label"></label>
+                            <input asp-for="StartDateTime" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="StartDateTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndDateTime" class="control-label"></label>
+                            <input asp-for="EndDateTime" type="time" class="form-control" />
+                            <span asp-validation-for="EndDateTime" class="text-danger"></span>
+                        </div>
+
+                        <!-- Hall -->
+                        <div class="mb-3">
+                            <label asp-for="HallId" class="form-label"></label>
+                            <select asp-for="HallId" class="form-select" asp-items="ViewBag.HallId"></select>
+                            <span asp-validation-for="HallId" class="text-danger"></span>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="mb-3">
+                            <label class="form-label">Booked By</label>
+                            <input type="text" class="form-control" value="@ViewBag.CurrentUserFirstName" disabled />
+                            <input type="hidden" name="AICUserId" value="@ViewBag.CurrentUserId" />
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary px-4 rounded-pill">Create</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill ms-2">Back</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="EndDateTime" class="control-label"></label>
-                <input asp-for="EndDateTime" type="datetime-local" class="form-control" id="endTime" />
-                <span asp-validation-for="EndDateTime" class="text-danger"></span>
-            </div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const startInput = document.getElementById("startTime");
-                    const endInput = document.getElementById("endTime");
-
-                    const now = new Date();
-                    const maxStart = new Date();
-                    maxStart.setMonth(maxStart.getMonth() + 2);
-
-                    // set min/max for StartDateTime (today .. 2 months)
-                    startInput.min = now.toISOString().slice(0, 16);
-                    startInput.max = maxStart.toISOString().slice(0, 16);
-
-                    function validateTimes() {
-                        const start = new Date(startInput.value);
-                        const end = new Date(endInput.value);
-                        const startTime = start.getHours() + start.getMinutes() / 60;
-                        const endTime = end.getHours() + end.getMinutes() / 60;
-
-                        const earliest = 6;   // 6 AM
-                        const latest = 23;    // 11 PM
-
-                        let msg = "";
-
-                        if (start < now) {
-                            msg = "Start date and time must not be in the past.";
-                        } else if (start > maxStart) {
-                            msg = "Start date cannot be more than 2 months ahead.";
-                        } else if (startTime < earliest || startTime > latest) {
-                            msg = "Bookings can only start between 6:00 AM and 11:00 PM.";
-                        } else if (endTime < earliest || endTime > latest) {
-                            msg = "Bookings can only end between 6:00 AM and 11:00 PM.";
-                        } else if (end <= start) {
-                            msg = "End time must be after the start time.";
-                        } else if ((end - start) / (1000 * 60 * 60) > 4) {
-                            msg = "End time must be within 4 hours after the start time.";
-                        }
-
-                        if (msg) {
-                            alert(msg);
-                            return false;
-                        }
-                        return true;
-                    }
-
-                    document.querySelector("form").addEventListener("submit", function (e) {
-                        if (!validateTimes()) {
-                            e.preventDefault();
-                        }
-                    });
-                });
-            </script>
-
-            <div class="form-group">
-                <label asp-for="HallId" class="control-label"></label>
-                <select asp-for="HallId" class ="form-control" asp-items="ViewBag.HallId"></select>
-            </div>
-
-            <div class="form-group">
-                <label>Booked By</label>
-                <input type="text" class="form-control" value="@ViewBag.CurrentUserFirstName" disabled />
-                <input type="hidden" name="AICUserId" value="@ViewBag.CurrentUserId" />
-            </div>
-
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-create" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

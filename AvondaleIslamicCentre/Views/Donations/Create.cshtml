@@ -1,59 +1,67 @@
 ﻿@model AvondaleIslamicCentre.Models.Donation
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Donation";
 }
 
-<h1>Create</h1>
+<div class="container mt-4 animate-up">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-center py-3">
+                    <h4 class="mb-0 text-white" >Create Donation</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>Donation</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DonationType" class="control-label"></label>
-                <select asp-for="DonationType" class="form-control" asp-items="Html.GetEnumSelectList<DonationType>()"></select>
-                <span asp-validation-for="DonationType" class="text-danger"></span>
-            </div>
+                        <div class="mb-3">
+                            <label asp-for="Amount" class="form-label fw-bold"></label>
+                            <input asp-for="Amount" class="form-control rounded-pill" />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="PaymentMethod" class="control-label"></label>
-                <select asp-for="PaymentMethod" class="form-control" asp-items="Html.GetEnumSelectList<PaymentMethod>()"></select>
-                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-            </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DonationType" class="form-label fw-bold"></label>
+                                <select asp-for="DonationType" class="form-select rounded-pill" asp-items="Html.GetEnumSelectList<DonationType>()"></select>
+                                <span asp-validation-for="DonationType" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PaymentMethod" class="form-label fw-bold"></label>
+                                <select asp-for="PaymentMethod" class="form-select rounded-pill" asp-items="Html.GetEnumSelectList<PaymentMethod>()"></select>
+                                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-bold"></label>
+                            <textarea asp-for="Description" class="form-control rounded" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group">
-                <label>Date Donated</label>
-                <input type="text" class="form-control" value="@DateTime.Now.ToString("g")" disabled />
-            </div>
+                        <div class="mb-3">
+                            <label>Date Donated</label>
+                            <input type="text" class="form-control" value="@DateTime.Now.ToString("g")" disabled />
+                        </div>
 
-            <div class="form-group">
-                <label>Donated By</label>
-                <input type="text" class="form-control" value="@ViewBag.CurrentUserFirstName" disabled />
-                <input type="hidden" name="AICUserId" value="@ViewBag.CurrentUserId" />
-            </div>
+                        <div class="mb-3">
+                            <label>Donated By</label>
+                            <input type="text" class="form-control" value="@ViewBag.CurrentUserFirstName" disabled />
+                            <input type="hidden" name="AICUserId" value="@ViewBag.CurrentUserId" />
+                        </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-create" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-create rounded-pill px-4 py-2">Create Donation</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 ms-2">Back to List</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+ </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -45,7 +45,15 @@ namespace AvondaleIslamicCentre.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                bookings = bookings.Where(b => (b.AICUserId != null && b.AICUserId.Contains(searchString)) || b.Hall.Name.Contains(searchString));
+                var s = searchString.Trim();
+                // search by hall name
+                IQueryable<Booking> filtered = bookings.Where(b => b.Hall.Name.Contains(s));
+
+                // search by user id (username) or user's first/last name
+                filtered = filtered.Union(bookings.Where(b => b.AICUserId != null && b.AICUserId.Contains(s)));
+                filtered = filtered.Union(bookings.Where(b => b.AICUser != null && (b.AICUser.FirstName.Contains(s) || b.AICUser.LastName.Contains(s))));
+
+                bookings = filtered;
             }
 
             bookings = sortOrder switch
@@ -112,7 +120,7 @@ namespace AvondaleIslamicCentre.Controllers
             // Force owner to current user
             booking.AICUserId = _userManager.GetUserId(User);
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
@@ -189,7 +197,7 @@ namespace AvondaleIslamicCentre.Controllers
                 booking.AICUserId = existing.AICUserId;
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

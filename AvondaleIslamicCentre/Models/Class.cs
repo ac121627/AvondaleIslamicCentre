@@ -24,11 +24,10 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Current Students")]
         public int CurrentStudents { get; set; } // Current number of students in the class
 
-        [Required]
         [Display(Name = "Teacher")]
-        public int TeacherId { get; set; } // Foreign key to Teacher
-        public Teacher? Teacher { get; set; } // Navigation property to Teacher
+        public int? TeacherId { get; set; } // Foreign key to Teacher (nullable)
+        public Teacher? Teacher { get; set; } // Navigation property to Teacher (nullable)
 
-        public ICollection<Student> Students { get; set; } = new List<Student>(); // Navigation property to multiple Students
+        public ICollection<Student>? Students { get; set; } // Navigation property to multiple Students (nullable)
     }
 }

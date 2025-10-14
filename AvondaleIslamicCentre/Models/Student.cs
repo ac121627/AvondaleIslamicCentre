@@ -146,16 +146,12 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Quran Hifz")]
         public QuranLevel QuranHifz { get; set; }
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Class.")]
         [Display(Name = "Class")]
-        public int ClassId { get; set; }
+        public int? ClassId { get; set; }
         public Class? Class { get; set; } // Navigation property to Class
 
-        [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid Teacher.")]
         [Display(Name = "Teacher")]
-        public int TeacherId { get; set; } // Foreign key to Teacher
-        public Teacher? Teacher { get; set; } // Navigation property to Teacher
+        public int? TeacherId { get; set; } // Foreign key to Teacher (nullable)
+        public Teacher? Teacher { get; set; } // Navigation property to Teacher (nullable)
     }
 }

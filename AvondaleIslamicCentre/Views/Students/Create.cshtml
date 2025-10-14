@@ -1,109 +1,131 @@
 ﻿@model AvondaleIslamicCentre.Models.Student
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Student";
+
+    // Server-side validation boundaries (DOB must be between 5 and 20 years)
+    var maxDate = DateTime.Today.AddYears(-5).ToString("yyyy-MM-dd");
+    var minDate = DateTime.Today.AddYears(-20).ToString("yyyy-MM-dd");
 }
 
-<h1>Create</h1>
+<div class="container mt-4 animate-up">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white text-center py-3">
+                    <h4 class="mb-0 text-white">Create New Student</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-<h4>Student</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GuardianFirstName" class="control-label"></label>
-                <input asp-for="GuardianFirstName" class="form-control" />
-                <span asp-validation-for="GuardianFirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GuardianLastName" class="control-label"></label>
-                <input asp-for="GuardianLastName" class="form-control" />
-                <span asp-validation-for="GuardianLastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ethnicity" class="control-label"></label>
-                <select asp-for="Ethnicity" class="form-control" asp-items="Html.GetEnumSelectList<Ethnicity>()"></select>
-                <span asp-validation-for="Ethnicity" class="text-danger"></span>
-            </div>
+                        <div class="mb-3">
+                            <label asp-for="GuardianFirstName" class="form-label fw-bold"></label>
+                            <input asp-for="GuardianFirstName" class="form-control rounded-pill" />
+                            <span asp-validation-for="GuardianFirstName" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="QuranNazira" class="control-label"></label>
-                <select asp-for="QuranNazira" class="form-control" asp-items="Html.GetEnumSelectList<QuranLevel>()"></select>
-                <span asp-validation-for="QuranNazira" class="text-danger"></span>
-            </div>
+                        <div class="mb-3">
+                            <label asp-for="GuardianLastName" class="form-label fw-bold"></label>
+                            <input asp-for="GuardianLastName" class="form-control rounded-pill" />
+                            <span asp-validation-for="GuardianLastName" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="QuranHifz" class="control-label"></label>
-                <select asp-for="QuranHifz" class="form-control" asp-items="Html.GetEnumSelectList<QuranLevel>()"></select>
-                <span asp-validation-for="QuranHifz" class="text-danger"></span>
-            </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label fw-bold"></label>
+                                <input asp-for="FirstName" class="form-control rounded-pill" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
 
-            <div class="form-group">
-                <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" type="date" id="dobField" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label fw-bold"></label>
+                                <input asp-for="LastName" class="form-control rounded-pill" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const dobField = document.getElementById("dobField");
-                    const today = new Date();
-                    const minDate = new Date(today.getFullYear() - 20, today.getMonth(), today.getDate());
-                    const maxDate = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate());
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-bold"></label>
+                            <input asp-for="Email" class="form-control rounded-pill" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
 
-                    dobField.min = minDate.toISOString().split('T')[0];
-                    dobField.max = maxDate.toISOString().split('T')[0];
-                });
-            </script>
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
+                            <input asp-for="PhoneNumber" class="form-control rounded-pill" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Gender" class="form-label fw-bold"></label>
+                                <select asp-for="Gender" class="form-control rounded-pill" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Ethnicity" class="form-label fw-bold"></label>
+                                <select asp-for="Ethnicity" class="form-control rounded-pill" asp-items="Html.GetEnumSelectList<Ethnicity>()"></select>
+                                <span asp-validation-for="Ethnicity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="QuranNazira" class="form-label fw-bold"></label>
+                                <select asp-for="QuranNazira" class="form-control rounded-pill" asp-items="Html.GetEnumSelectList<QuranLevel>()"></select>
+                                <span asp-validation-for="QuranNazira" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="QuranHifz" class="form-label fw-bold"></label>
+                                <select asp-for="QuranHifz" class="form-control rounded-pill" asp-items="Html.GetEnumSelectList<QuranLevel>()"></select>
+                                <span asp-validation-for="QuranHifz" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DateOfBirth" class="form-label fw-bold"></label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control rounded-pill"
+                                   min="@minDate" max="@maxDate"
+                                   oninvalid="this.setCustomValidity('Date of birth must make the student between 5 and 20 years old.')"
+                                   oninput="this.setCustomValidity('')" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            <small class="form-text text-muted">Must be between 5 and 20 years old</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label fw-bold"></label>
+                            <input asp-for="Address" class="form-control rounded-pill" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ClassId" class="form-label fw-bold"></label>
+                                <select asp-for="ClassId" class="form-control rounded-pill" asp-items="ViewBag.ClassId"></select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TeacherId" class="form-label fw-bold"></label>
+                                <select asp-for="TeacherId" class="form-control rounded-pill" asp-items="ViewBag.TeacherId"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-4 text-center">
+                            <button type="submit" class="btn btn-success rounded-pill px-4 py-2">Create Student</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 ms-2">Back to List</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ClassId" class="control-label"></label>
-                <select asp-for="ClassId" class ="form-control" asp-items="ViewBag.ClassId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="TeacherId" class="control-label"></label>
-                <select asp-for="TeacherId" class ="form-control" asp-items="ViewBag.TeacherId"></select>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-create" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

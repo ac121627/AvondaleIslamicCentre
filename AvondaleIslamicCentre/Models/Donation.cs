@@ -44,10 +44,9 @@ namespace AvondaleIslamicCentre.Models
         [StringLength(500, ErrorMessage = "Description must not exceed 500 characters.")]
         public string? Description { get; set; }
 
-        [Required]
         [Display(Name = "Username")]
-        public string? AICUserId { get; set; }
+        public string? AICUserId { get; set; } // nullable FK
         [ForeignKey("AICUserId")]
-        public AICUser? AICUser { get; set; } // Navigation property
+        public AICUser? AICUser { get; set; } // Navigation property (nullable)
     }
 }

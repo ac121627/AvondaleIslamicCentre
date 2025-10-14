@@ -10,6 +10,12 @@
     <h4>Booking</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            Booked By
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AICUser.FirstName)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.StartDateTime)
         </dt>
@@ -27,12 +33,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Hall.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AICUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AICUser.FirstName)
         </dd>
     </dl>
 </div>

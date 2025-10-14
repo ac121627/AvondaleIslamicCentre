@@ -7,21 +7,29 @@
     var currentFilter = (string)ViewData["CurrentFilter"] ?? "";
 }
 
-<h1>Bookings</h1>
-
-<p>
-    <a asp-action="Create" class="btn btn-create">Make A New Booking</a>
-</p>
-
-<form method="get" class="mb-3">
-    <input type="text" name="searchString" value="@currentFilter" placeholder="Search by hall or user..." class="form-control d-inline-block w-auto me-2" />
-    <input type="hidden" name="sortOrder" value="@currentSort" />
-    <button type="submit" class="btn btn-secondary">Search</button>
-</form>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1 class="page-title">Bookings</h1>
+        <small class="page-subtitle">Manage hall reservations</small>
+    </div>
+    <div class="d-flex align-items-center">
+        <form method="get" class="search-wrapper mb-0">
+            <div class="input-group search-input">
+                <input type="text" name="searchString" value="@currentFilter" placeholder="Search by hall or user..." class="form-control" />
+                <input type="hidden" name="sortOrder" value="@currentSort" />
+                <button class="btn btn-secondary search-btn" type="submit"><i class="bi bi-search"></i>Search</button>
+            </div>
+        </form>
+        <a asp-action="Create" class="btn btn-create ms-3">Make A New Booking</a>
+    </div>
+</div>
 
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Booked By
+            </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@(ViewData["StartSortParm"])" asp-route-searchString="@currentFilter">@Html.DisplayNameFor(model => model[0].StartDateTime)</a>
             </th>
@@ -30,9 +38,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model[0].Hall)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].AICUser)
             </th>
             <th>
 
@@ -44,6 +49,9 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.AICUser.FirstName)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.StartDateTime)
                 </td>
                 <td>
@@ -52,18 +60,30 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Hall.Name)
                 </td>
+                
                 <td>
-                    @Html.DisplayFor(modelItem => item.AICUser.FirstName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-edit btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-details btn-sm ms-1">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-delete btn-sm ms-1">Delete</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-edit btn-sm">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-details btn-sm ms-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-delete btn-sm ms-1">Delete</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-details btn-sm">Details</a>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@if (User.IsInRole("Member"))
+{
+    <div class="alert alert-info" role="alert">
+        Should you need to make any changes to or cancel your booking, kindly contact an administrator.
+    </div>
+}
 
 <nav aria-label="Page navigation">
     <ul class="pagination">

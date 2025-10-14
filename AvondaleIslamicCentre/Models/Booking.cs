@@ -12,25 +12,25 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [Display(Name = "Start Date and Time")]
-        //[StartDateTime]
+        [StartDateTime]
         public DateTime StartDateTime { get; set; } 
 
         [Required]
         [Display(Name = "End Time")]
-        //[EndDateTime]
-        public DateTime EndDateTime { get; set; } 
+        [DataType(DataType.Time)]
+        [EndDateTime]
+        public TimeSpan EndDateTime { get; set; } 
 
         [Required]
         [Display(Name ="Hall")]
-        public int HallId { get; set; }
+        public int? HallId { get; set; }
         [ForeignKey("HallId")]
         public Hall? Hall { get; set; } // Navigation property to Hall
 
-        [Required]
         [Display(Name = "Username")]
-        public string? AICUserId { get; set; }// Default value to ensure it is not null
+        public string? AICUserId { get; set; } // nullable FK
         [ForeignKey("AICUserId")]
-        public AICUser? AICUser { get; set; }  // Navigation property to AICUser
+        public AICUser? AICUser { get; set; }  // Navigation property to AICUser (nullable)
 
     }
 } 

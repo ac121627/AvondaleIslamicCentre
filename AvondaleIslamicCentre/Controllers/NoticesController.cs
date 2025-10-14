@@ -77,7 +77,7 @@ namespace AvondaleIslamicCentre.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("NoticeId,Title,Message,UpdatedAt")] Notice notice)
         {
-            if (!ModelState.IsValid)    
+            if (ModelState.IsValid)    
             {
                 notice.PostedAt = DateTime.Now;
                 notice.AICUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
@@ -116,7 +116,7 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {

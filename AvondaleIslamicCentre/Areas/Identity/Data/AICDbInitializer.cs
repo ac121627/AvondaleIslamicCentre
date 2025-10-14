@@ -266,17 +266,22 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 {
                     var hallIds = context.Hall.Select(h => h.HallId).ToList();
                     var userIdForBookings = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+
                     var bookings = new List<Booking>();
                     for (int i = 1; i <= 20; i++)
                     {
+                        var start = DateTime.Today.AddDays(i % 7).AddHours(9 + (i % 6)); // start time
+                        var end = start.AddHours(1); // 1 hour after start
+
                         bookings.Add(new Booking
                         {
-                            StartDateTime = DateTime.Today.AddDays(i % 7).AddHours(9 + (i % 6)),
-                            EndDateTime = DateTime.Today.AddDays(i % 7).AddHours(10 + (i % 6)),
+                            StartDateTime = start,
+                            EndDateTime = end.TimeOfDay, // ✅ only store time
                             HallId = hallIds.Count > 0 ? hallIds[(i - 1) % hallIds.Count] : 1,
                             AICUserId = userIdForBookings
                         });
                     }
+
                     context.Booking.AddRange(bookings);
                     await context.SaveChangesAsync();
                 }
@@ -285,6 +290,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
             {
                 Console.WriteLine("Error seeding Bookings: " + ex.Message);
             }
+
         }
     }
 }

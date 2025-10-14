@@ -4,6 +4,7 @@ using AvondaleIslamicCentre.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvondaleIslamicCentre.Migrations
 {
     [DbContext(typeof(AICDbContext))]
-    partial class AICDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251013235449_fixBooking")]
+    partial class fixBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,13 +114,13 @@ namespace AvondaleIslamicCentre.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
                     b.Property<string>("AICUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<TimeSpan>("EndDateTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("HallId")
-                        .IsRequired()
+                    b.Property<int>("HallId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDateTime")
@@ -153,7 +156,7 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("TeacherId")
+                    b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("ClassId");
@@ -172,6 +175,7 @@ namespace AvondaleIslamicCentre.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DonationId"));
 
                     b.Property<string>("AICUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Amount")
@@ -227,6 +231,7 @@ namespace AvondaleIslamicCentre.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NoticeId"));
 
                     b.Property<string>("AICUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Message")
@@ -262,7 +267,7 @@ namespace AvondaleIslamicCentre.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ClassId")
+                    b.Property<int>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -310,7 +315,7 @@ namespace AvondaleIslamicCentre.Migrations
                     b.Property<int>("QuranNazira")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeacherId")
+                    b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("StudentId");
@@ -496,7 +501,9 @@ namespace AvondaleIslamicCentre.Migrations
                 {
                     b.HasOne("AvondaleIslamicCentre.Areas.Identity.Data.AICUser", "AICUser")
                         .WithMany("Booking")
-                        .HasForeignKey("AICUserId");
+                        .HasForeignKey("AICUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AvondaleIslamicCentre.Models.Hall", "Hall")
                         .WithMany("Bookings")
@@ -513,7 +520,9 @@ namespace AvondaleIslamicCentre.Migrations
                 {
                     b.HasOne("AvondaleIslamicCentre.Models.Teacher", "Teacher")
                         .WithMany("Classes")
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });
@@ -522,7 +531,9 @@ namespace AvondaleIslamicCentre.Migrations
                 {
                     b.HasOne("AvondaleIslamicCentre.Areas.Identity.Data.AICUser", "AICUser")
                         .WithMany("Donations")
-                        .HasForeignKey("AICUserId");
+                        .HasForeignKey("AICUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AICUser");
                 });
@@ -531,7 +542,9 @@ namespace AvondaleIslamicCentre.Migrations
                 {
                     b.HasOne("AvondaleIslamicCentre.Areas.Identity.Data.AICUser", "AICUser")
                         .WithMany()
-                        .HasForeignKey("AICUserId");
+                        .HasForeignKey("AICUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AICUser");
                 });
@@ -540,11 +553,15 @@ namespace AvondaleIslamicCentre.Migrations
                 {
                     b.HasOne("AvondaleIslamicCentre.Models.Class", "Class")
                         .WithMany("Students")
-                        .HasForeignKey("ClassId");
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AvondaleIslamicCentre.Models.Teacher", "Teacher")
                         .WithMany("Students")
-                        .HasForeignKey("TeacherId");
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Class");
 

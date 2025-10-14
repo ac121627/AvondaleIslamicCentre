@@ -9,7 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("AvondaleIslami
 
 builder.Services.AddDbContext<AICDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<AICUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<AICUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AICDbContext>();
 

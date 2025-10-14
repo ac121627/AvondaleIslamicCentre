@@ -132,6 +132,53 @@ h1, h4 {
         vertical-align: middle;
     }
 
+/* Pagination styling to match brand theme */
+.pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0;
+    list-style: none;
+}
+
+.pagination .page-item .page-link {
+    color: var(--brand-green);
+    background: transparent;
+    border: 1px solid rgba(45,112,52,0.12);
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: all 0.18s ease-in-out;
+    min-width: 42px;
+    text-align: center;
+}
+
+.pagination .page-item .page-link:hover {
+    background: rgba(45,112,52,0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(45,112,52,0.08);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--brand-green);
+    border-color: var(--brand-green);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(45,112,52,0.18);
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.disabled .page-link,
+.pagination .page-item .page-link[aria-disabled="true"] {
+    color: var(--muted);
+    border-color: rgba(0,0,0,0.05);
+    background: #f8f9fa;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.pagination .page-link .visually-hidden { display:none; }
+
 /* Buttons */
 .btn {
     border-radius: 8px;
@@ -183,3 +230,130 @@ h1, h4 {
         background-color: #c82333;
         color: white !important; 
     }
+
+/* Subtle form/card animation and polished inputs */
+.animate-up {
+  animation: fadeInUp 420ms ease both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  background: linear-gradient(135deg, rgba(45,112,52,0.95), rgba(34,91,43,0.95));
+  color: #fff;
+}
+
+.form-control.rounded-pill {
+  border-radius: 999px;
+  transition: box-shadow .18s ease, transform .12s ease;
+}
+.form-control.rounded-pill:focus {
+  box-shadow: 0 8px 24px rgba(45,112,52,0.08);
+  transform: translateY(-2px);
+}
+
+.btn-primary, .btn-create, .btn-edit, .btn-details, .btn-delete {
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn-primary:hover, .btn-create:hover, .btn-edit:hover, .btn-details:hover, .btn-delete:hover {
+  transform: translateY(-3px);
+}
+
+/* Input ripple */
+.input-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.input-ripple .ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(45,112,52,0.12);
+  animation: ripple 600ms linear;
+}
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* Button icon transition */
+.btn .btn-icon { transition: transform .18s ease, opacity .18s ease; margin-right:8px; }
+.btn:hover .btn-icon { transform: translateX(4px) rotate(-6deg); opacity: 0.95; }
+
+/* Detail card layout */
+.detail-card { border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(37,99,53,0.08); background: linear-gradient(180deg,#fff, #fbfffb); }
+.detail-card .detail-header { padding: 18px 24px; background: linear-gradient(90deg, rgba(45,112,52,0.95), rgba(34,91,43,0.95)); color: #fff; }
+.detail-card .detail-body { padding: 20px; }
+.detail-row { display:flex; gap:12px; padding:10px 0; border-bottom:1px dashed rgba(0,0,0,0.04); }
+.detail-row:last-child { border-bottom: none; }
+.detail-key { width: 180px; color: var(--brand-green); font-weight:600; }
+.detail-val { flex:1; }
+
+/* Table hover effect for futuristic feel */
+.table tbody tr { transition: transform .12s ease, box-shadow .12s ease; }
+.table tbody tr:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(45,112,52,0.06); }
+
+/* Page title styling */
+.page-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--brand-green);
+  letter-spacing: 0.6px;
+  margin: 0;
+  display: inline-block;
+  position: relative;
+}
+.page-title::after {
+  content: "";
+  display: block;
+  height: 6px;
+  width: 56px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, rgba(45,112,52,0.9), rgba(126,211,33,0.9));
+}
+.page-subtitle { color: #5a7d63; font-weight: 500; margin-left: 8px; }
+
+/* Unified search bar */
+.search-wrapper { display:flex; gap:8px; align-items:center; }
+.search-input {
+  min-width: 340px;
+  max-width: 560px;
+}
+.search-input .form-control {
+  border-radius: 999px 0 0 999px;
+  border-right: 0;
+}
+.search-input .input-group-text {
+  border-radius: 999px 0 0 999px;
+  background: transparent;
+  border-right: 0;
+}
+.search-btn {
+  border-radius: 0 999px 999px 0;
+  padding: 0.6rem 1rem;
+}
+.header-actions { display:flex; gap:8px; align-items:center; }
+
+/* Icon spacing inside search button */
+.search-btn .bi { margin-right: 6px; font-size: 1rem; vertical-align: -1px; }
+
+/* Subtle animated focus effects (CSS only) */
+.form-control:focus {
+  outline: none;
+  transition: box-shadow .18s ease, transform .12s ease;
+  box-shadow: 0 0 0 0.18rem rgba(45,112,52,0.12), inset 0 0 20px rgba(126,211,33,0.02);
+}
+
+/* When a search group has focus, slightly lift the button and add a gradient outline */
+.search-input:focus-within .search-btn {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(45,112,52,0.08);
+  background: linear-gradient(90deg, var(--brand-green), var(--brand-green-dark));
+  color: #fff;
+}
+
+/* Ensure search button text color stays visible when background gradient applied */
+.search-input:focus-within .search-btn:hover { filter: brightness(0.98); }
