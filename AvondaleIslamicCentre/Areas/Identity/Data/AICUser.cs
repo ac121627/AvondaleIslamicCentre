@@ -38,7 +38,7 @@ public class AICUser : IdentityUser
                "+64 followed by a 2-digit area code (20-26),\n" +
                "a 3- or 4-digit local number,\n" +
                "and a 4- or 5-digit subscriber number.\n" +
-               "(e.g., +64 20-345-6789 or +64 22-1234-5678).")]    
+               "e.g. +64 20-345-6789.")]    
     public string Phone { get; set; } 
 
     public ICollection<Booking> Booking { get; set; } = new List<Booking>(); // Navigation property to Booking

@@ -20,7 +20,7 @@ namespace AvondaleIslamicCentre.Models
         public string Description { get; set; } // Description of the class
 
         [Required]
-        [Range(0, 200, ErrorMessage = "Number of students must be between 0 and 200.")]
+        [Range(1, 30, ErrorMessage = "Number of students must be between 1 and 30.")]
         [Display(Name = "Current Students")]
         public int CurrentStudents { get; set; } // Current number of students in the class
 

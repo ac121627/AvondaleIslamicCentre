@@ -27,7 +27,9 @@
     </div>
 </div>
 
-<table class="table">
+@if (Model.Count > 0)
+{
+    <table class="table">
     <thead>
         <tr>
             <th>
@@ -89,21 +91,43 @@
             </tr>
         }
     </tbody>
-</table>
+    </table>
 
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Previous</a>
-        </li>
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">@i</a>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Previous</a>
             </li>
-        }
-        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Next</a>
-        </li>
-    </ul>
-</nav>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
+else
+{
+    if (!String.IsNullOrEmpty(currentFilter))
+    {
+        <div class="alert alert-warning">We couldn’t find anything matching your search. Try using different words or check your spelling.</div>
+    }
+    else if (User.IsInRole("Member"))
+    {
+        <div class="alert alert-info d-flex align-items-center gap-3">
+            <i class="bi bi-heart-fill text-danger" style="font-size:1.2rem"></i>
+            <div>
+                <div>You haven't made any donations yet.</div>
+                <div class="mt-2"><a asp-action="Create" class="btn btn-create btn-lg rounded-pill">Make a donation now</a></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-light">No donations found.</div>
+    }
+}
