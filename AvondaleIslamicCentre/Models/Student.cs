@@ -89,7 +89,7 @@ namespace AvondaleIslamicCentre.Models
 
         [StringLength(100)]
         [Required(ErrorMessage = "Please enter Student First Name")]
-        [MinLength(3)]
+        [MinLength(2)]
         [MaxLength(25)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         [Display(Name = "Student First Name")]
@@ -97,7 +97,7 @@ namespace AvondaleIslamicCentre.Models
 
         [StringLength(100)]
         [Required(ErrorMessage = "Please enter Student Last Name")]
-        [MinLength(3)]
+        [MinLength(2)]
         [MaxLength(25)]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         [Display(Name = "Student Last Name")]
@@ -110,24 +110,19 @@ namespace AvondaleIslamicCentre.Models
         public string Email { get; set; } // Email of the guardian
 
         [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s,'\-\/\.#]+$", ErrorMessage = "Please enter a valid address.")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Address must be 5–100 characters.")]
         public string Address { get; set; }// Address of the guardian
 
         [Required]
         [Display(Name = "Student Date of Birth")]
-        //[DOBValidator]
         [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; } // Date of birth of the student
 
         [Required, Display(Name = "Guardian Phone Number")]
         [DataType(DataType.PhoneNumber), MaxLength(17)]
-        [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
-        ErrorMessage = "Phone Number is not valid.\n\n" +
-               "In New Zealand:\n" +
-               "+64 followed by a 2-digit area code (20-26),\n" +
-               "a 3- or 4-digit local number,\n" +
-               "and a 4- or 5-digit subscriber number.\n" +
-               "e.g. +64 20-345-6789.")]
+        [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$",
+        ErrorMessage = "Please enter a valid New Zealand phone number (e.g., +64 21 234 5678 or 021 234 5678).")]
         public string PhoneNumber { get; set; } // Phone number of the guardian
 
         [Required]

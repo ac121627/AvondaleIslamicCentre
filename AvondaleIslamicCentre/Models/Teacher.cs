@@ -9,6 +9,7 @@ namespace AvondaleIslamicCentre.Models
         [Key]
         [Display(Name = "Teacher ID")]
         public int TeacherId { get; set; }
+
         [Required]
         [Display(Name ="First Name")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "First name must be 3–50 characters.")]
@@ -28,13 +29,8 @@ namespace AvondaleIslamicCentre.Models
 
         [Required, Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber), MaxLength(17)]
-        [RegularExpression(@"^\+((64 (\b(2[0-6])\b)-\d{3,4}-\d{4,5})|(91 \d{5}-\d{5}))$",
-        ErrorMessage = "Phone Number is not valid.\n\n" +
-               "In New Zealand:\n" +
-               "+64 followed by a 2-digit area code (20-26),\n" +
-               "a 3- or 4-digit local number,\n" +
-               "and a 4- or 5-digit subscriber number.\n" +
-               "e.g. +64 20-345-6789.")]
+        [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$",
+        ErrorMessage = "Please enter a valid New Zealand phone number (e.g., +64 21 234 5678 or 021 234 5678).")]
         public string PhoneNumber { get; set; }  // Phone number of the guardian
 
         public ICollection<Class>? Classes { get; set; } = new List<Class>(); // Navigation property to Class   

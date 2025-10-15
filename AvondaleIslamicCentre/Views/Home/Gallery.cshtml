@@ -32,7 +32,6 @@
     }
 </div>
 
-<!-- Modal -->
 <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content border-0">
@@ -43,15 +42,3 @@
     </div>
   </div>
 </div>
-
-@section Scripts {
-    <script>
-        var galleryModal = document.getElementById('galleryModal');
-        galleryModal.addEventListener('show.bs.modal', function (event) {
-            var link = event.relatedTarget;
-            var img = link.getAttribute('data-bs-img');
-            var modalImage = document.getElementById('galleryModalImage');
-            modalImage.src = img;
-        });
-    </script>
-}

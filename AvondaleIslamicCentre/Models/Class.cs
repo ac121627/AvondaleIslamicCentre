@@ -16,7 +16,7 @@ namespace AvondaleIslamicCentre.Models
         public string ClassName { get; set; }  // Name of the class
 
         [Required]
-        [StringLength(1000, MinimumLength = 5, ErrorMessage = "Class description must be between 5 and 1000 characters.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Class description must be between 5 and 100 characters.")]
         public string Description { get; set; } // Description of the class
 
         [Required]

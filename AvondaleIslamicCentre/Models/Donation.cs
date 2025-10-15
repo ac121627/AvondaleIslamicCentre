@@ -41,7 +41,7 @@ namespace AvondaleIslamicCentre.Models
         [Display(Name = "Payment Method")]
         public PaymentMethod PaymentMethod { get; set; }
 
-        [StringLength(500, ErrorMessage = "Description must not exceed 500 characters.")]
+        [StringLength(100, ErrorMessage = "Description must not exceed 100 characters.")]
         public string? Description { get; set; }
 
         [Display(Name = "Username")]

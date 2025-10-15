@@ -53,7 +53,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     EmailConfirmed = true,
                     FirstName = "Site",
                     LastName = "Admin",
-                    Phone = "+64 21-100-1001"
+                    Phone = "+64 21 100 1001"
                 };
                 var res = await userManager.CreateAsync(newAdmin, "Admin@123");
                 if (!res.Succeeded)
@@ -77,7 +77,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     EmailConfirmed = true,
                     FirstName = "Regular",
                     LastName = "Member",
-                    Phone = "+64 21-100-1002"
+                    Phone = "+64 21 100 1002"
                 };
                 var resm = await userManager.CreateAsync(newMember, "Member@123");
                 if (!resm.Succeeded)
@@ -105,7 +105,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     var halls = new List<Hall>
                     {
                         new Hall { Name = "Men's Main Hall", Capacity = 200 },
-                        new Hall { Name = "Men's Back Hall", Capacity = 250 },
+                        new Hall { Name = "Men's Back Hall", Capacity = 180 },
                         new Hall { Name = "Ladies Main Hall", Capacity = 100 },
                         new Hall { Name = "Ladies Small Hall", Capacity = 50 }
                     };
@@ -125,12 +125,12 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 {
                     var teachers = new List<Teacher>
                     {
-                        new Teacher { FirstName = "Aisha", LastName = "Khan", Email = "aisha.khan@aic.nz", PhoneNumber = "+64 21-111-0001" },
-                        new Teacher { FirstName = "David", LastName = "Ng", Email = "david.ng@aic.nz", PhoneNumber = "+64 21-111-0002" },
-                        new Teacher { FirstName = "Sana", LastName = "Ali", Email = "sana.ali@aic.nz", PhoneNumber = "+64 21-111-0003" },
-                        new Teacher { FirstName = "Liam", LastName = "Oconnor", Email = "liam.oconnor@aic.nz", PhoneNumber = "+64 21-111-0004" },
-                        new Teacher { FirstName = "Maya", LastName = "Patel", Email = "maya.patel@aic.nz", PhoneNumber = "+64 21-111-0005" },
-                        new Teacher { FirstName = "Noah", LastName = "Brown", Email = "noah.brown@aic.nz", PhoneNumber = "+64 21-111-0006" }
+                        new Teacher { FirstName = "Aisha", LastName = "Khan", Email = "aisha.khan@aic.nz", PhoneNumber = "+64 21 111 0001" },
+                        new Teacher { FirstName = "David", LastName = "Ng", Email = "david.ng@aic.nz", PhoneNumber = "+64 21 111 0002" },
+                        new Teacher { FirstName = "Sana", LastName = "Ali", Email = "sana.ali@aic.nz", PhoneNumber = "+64 21 111 0003" },
+                        new Teacher { FirstName = "Liam", LastName = "Oconnor", Email = "liam.oconnor@aic.nz", PhoneNumber = "+64 21 111 0004" },
+                        new Teacher { FirstName = "Maya", LastName = "Patel", Email = "maya.patel@aic.nz", PhoneNumber = "+64 21 111 0005" },
+                        new Teacher { FirstName = "Noah", LastName = "Brown", Email = "noah.brown@aic.nz", PhoneNumber = "+64 21 111 0006" }
                     };
                     context.Teachers.AddRange(teachers);
                     await context.SaveChangesAsync();
@@ -181,10 +181,9 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     var students = new List<Student>();
                     for (int i = 0; i < 20; i++)
                     {
-                        // generate a phone matching +64 21-xxx-xxxx
-                        var local = 200 + (i % 700); // 3-digit
-                        var subs = 1000 + i; // 4-digit
-                        var phone = $"+64 21-{local:D3}-{subs:D4}";
+                        var local = 200 + (i % 700); 
+                        var subs = 1000 + i;
+                        var phone = $"+64 21 {local:D3} {subs:D4}";
 
                         students.Add(new Student
                         {
