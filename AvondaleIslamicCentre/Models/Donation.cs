@@ -42,6 +42,7 @@ namespace AvondaleIslamicCentre.Models
         public PaymentMethod PaymentMethod { get; set; }
 
         [StringLength(100, ErrorMessage = "Description must not exceed 100 characters.")]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string? Description { get; set; }
 
         [Display(Name = "Username")]

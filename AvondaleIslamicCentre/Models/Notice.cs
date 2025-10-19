@@ -11,6 +11,7 @@ namespace AvondaleIslamicCentre.Models
         public int NoticeId { get; set; } // Unique ID for the notice
         [Required]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 100 characters.")]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string Title { get; set; }  // Title of the notice
 
         [Required]

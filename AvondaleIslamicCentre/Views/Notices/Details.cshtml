@@ -15,7 +15,10 @@
         <div class="detail-row"><div class="detail-key">Posted At</div><div class="detail-val">@Html.DisplayFor(m => m.PostedAt)</div></div>
 
         <div class="mt-3 text-end">
-            <a asp-action="Edit" asp-route-id="@Model?.NoticeId" class="btn btn-edit" data-icon="bi-pencil">Edit</a>
+            @if (!User.IsInRole("Member"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model?.NoticeId" class="btn btn-edit" data-icon="bi-pencil">Edit</a>
+            }
             <a asp-action="Index" class="btn btn-secondary ms-2" data-icon="bi-arrow-left">Back to List</a>
         </div>
     </div>

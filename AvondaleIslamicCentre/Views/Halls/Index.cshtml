@@ -26,6 +26,20 @@
         }
     </div>
 </div>
+<div class="d-flex align-items-center mb-2 gap-3">
+    <div class="fw-semibold text-success">Sort:</div>
+    <div>
+        <a asp-action="Index" asp-route-sortOrder="@(ViewData["NameSortParm"])" asp-route-searchString="@currentFilter" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-down-up"></i> Name
+        </a>
+    </div>
+    <div>
+        <a asp-action="Index" asp-route-sortOrder="@(ViewData["CapacitySortParm"])" asp-route-searchString="@currentFilter" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-down-up"></i> Capacity
+        </a>
+    </div>
+</div>
+
 <div class="row g-3">
     @if (!Model.Any())
     {

@@ -340,7 +340,7 @@ h1, h4 {
 /* Icon spacing inside search button */
 .search-btn .bi { margin-right: 6px; font-size: 1rem; vertical-align: -1px; }
 
-/* Subtle animated focus effects (CSS only) */
+/* Subtle animated focus effects */
 .form-control:focus {
   outline: none;
   transition: box-shadow .18s ease, transform .12s ease;
@@ -355,5 +355,5 @@ h1, h4 {
   color: #fff;
 }
 
-/* Ensure search button text color stays visible when background gradient applied */
+/* search button text color stays visible when background gradient applied */
 .search-input:focus-within .search-btn:hover { filter: brightness(0.98); }

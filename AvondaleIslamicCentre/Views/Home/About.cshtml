@@ -8,20 +8,29 @@
             <h1 class="page-title">About Avondale Islamic Centre</h1>
             <p class="page-subtitle">Serving the spiritual and educational needs of the Avondale community</p>
 
-            <p class="lead mt-3">Avondale Islamic Centre is a community mosque providing a welcoming space for worship, learning and social activities. We run daily prayers, Friday Jumu'ah, Quran classes, youth programs, and community outreach.</p>
-            <br></br>
-            <br></br>
-          
+            <p class="lead mt-3">
+                Avondale Islamic Centre is a community mosque providing a welcoming space for worship, learning and social activities.
+                We run daily prayers, Friday Jumu'ah, Quran classes, youth programs, and community outreach.
+            </p>
+
+            <br />
+
             <div>
-            <h4 >What we offer</h4>
-            <ul>
-                <li>Regular daily and Friday prayers</li>
-                <li>Religious education and Quran classes for all ages</li>
-                <li>Community events and social programs</li>
-                <li>Venue hire for approved religious and community activities</li>
-            </ul>
+                <h4>What we offer</h4>
+                <ul>
+                    <li>Regular daily and Friday prayers</li>
+                    <li>Religious education and Quran classes for all ages</li>
+                    <li>Community events and social programs</li>
+                    <li>Venue hire for approved religious and community activities</li>
+                </ul>
             </div>
-            <p class="mt-3">We welcome everyone to visit and learn more about our services. For the latest events and updates, check our <a asp-controller="Notices" asp-action="Index">Notices</a> page or browse our <a asp-action="Gallery">Gallery</a>.</p>
+
+            <p class="mt-3">
+                We welcome everyone to visit and learn more about our services.
+                For the latest events and updates, check our
+                <a asp-controller="Notices" asp-action="Index">Notices</a> page
+                or browse our <a asp-action="Gallery">Gallery</a>.
+            </p>
         </div>
 
         <div class="col-lg-5">
@@ -29,11 +38,39 @@
                 <img src="~/Images/AIC logo.png" class="card-img-top p-4 bg-light" alt="Avondale Islamic Centre" />
                 <div class="card-body">
                     <h5 class="card-title">Visit Us</h5>
-                    <p class="card-text small-muted">Location and community contact information can be found on our Contact page. We encourage visitors and prospective members to attend a service or event.</p>
+                    <p class="card-text small-muted">
+                        Location and community contact information can be found on our Contact page.
+                        We encourage visitors and prospective members to attend a service or event.
+                    </p>
                     <a asp-controller="Notices" asp-action="Index" class="btn btn-create ms-3">Latest Notices</a>
                     <a asp-action="Gallery" class="btn btn-outline-secondary ms-2">View Gallery</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Contact Us Section -->
+    <div class="contact-section text-center mt-5 p-4 rounded shadow-sm">
+        <h3 class="text-success fw-bold mb-3">Contact Us</h3>
+        <p class="mb-2 text-muted">Have any questions or need assistance?</p>
+        <p>
+            <i class="bi bi-envelope-fill text-success me-2"></i>
+            <a href="mailto:ac121627@avcol.school.nz" class="text-decoration-none text-success fw-semibold">
+                ac121627@avcol.school.nz
+            </a>
+        </p>
+    </div>
 </div>
+
+<style>
+    .contact-section {
+        background-color: #f8fff8;
+        border-left: 4px solid #2d7034;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .contact-section a:hover {
+            text-decoration: underline;
+        }
+</style>

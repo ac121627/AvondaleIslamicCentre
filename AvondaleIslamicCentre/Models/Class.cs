@@ -12,6 +12,7 @@ namespace AvondaleIslamicCentre.Models
 
         [Required]
         [StringLength(30, MinimumLength = 2, ErrorMessage = "Class name must be between 2 and 30 characters.")]
+        [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         [Display(Name = "Class Name")]
         public string ClassName { get; set; }  // Name of the class
 

@@ -10,19 +10,19 @@ public class StartDateTime : ValidationAttribute
             var today = DateTime.Now;
             var maxDate = today.AddMonths(2);
 
-            // 1️⃣ Check if start date is in the past
+            // 1️ Check if start date is in the past
             if (startDate < today)
             {
                 return new ValidationResult("Start date and time must not be in the past.");
             }
 
-            // 2️⃣ Check if start date is more than 2 months ahead
+            // 2️ Check if start date is more than 2 months ahead
             if (startDate > maxDate)
             {
                 return new ValidationResult("Start date cannot be more than 2 months ahead.");
             }
 
-            // 3️⃣ Time validation (6 AM – 11 PM)
+            // 3️ Time validation (6 AM – 11 PM)
             var earliest = new TimeSpan(6, 0, 0);   // 6:00 AM
             var latest = new TimeSpan(19, 0, 0);    // 11:00 PM
 
