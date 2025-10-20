@@ -28,7 +28,7 @@ public class EndDateTime : ValidationAttribute
             return new ValidationResult("End time must be at least 1 hour after the start time.");
         }
 
-        // Keep your 4-hour max limit
+        //  4-hour max limit
         if ((endDateTime - start).TotalHours > 4)
         {
             return new ValidationResult("End time must be within 4 hours after the start time.");
