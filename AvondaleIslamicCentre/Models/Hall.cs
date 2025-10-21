@@ -10,7 +10,7 @@ namespace AvondaleIslamicCentre.Models
         public int HallId { get; set; } // Unique identifier for the hall
 
         [Required]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Hall name must be between 2 and 50 characters.")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "Hall name must be between 2 and 30 characters.")]
         [RegularExpression("^[A-Za-z]+( [A-Za-z]+)*$", ErrorMessage = "Only letters and single spaces between words are allowed.")]
         public string Name { get; set; }  // Name of the hall
 

@@ -14,24 +14,26 @@ public class AICUser : IdentityUser
 {
     [Required(ErrorMessage = "Please provide a valid First Name.")]
     [PersonalData] // Marks this property as personal data for GDPR purposes
-    [RegularExpression(@"^[A-Z][a-z\s]*$", ErrorMessage = "Name must begin with a capital letter and must not include special characters or numbers.")]
+    [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
     [Column(TypeName = "varchar(100)")] // Specifies database column type
-    [MinLength(2)]
-    [MaxLength(50)]
+    [MinLength(1)]
+    [MaxLength(25)]
     [Display(Name = "First Name")]
     public string FirstName { get; set; } 
 
     [Required(ErrorMessage = "Please provide a valid Last Name.")]
     [PersonalData] // Marks this property as personal data for GDPR purposes
-    [RegularExpression(@"^[A-Z][a-z\s]*$", ErrorMessage = "Name must begin with a capital letter and must not include special characters or numbers.")]
+    [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
     [Column(TypeName = "varchar(100)")] // Specifies database column type
-    [MinLength(2)]
-    [MaxLength(50)]
+    [MinLength(1)]
+    [MaxLength(25)]
     [Display(Name = "Last Name")]
     public string LastName { get; set; } 
 
     [Required, Display(Name ="Phone Number")]
-    [DataType(DataType.PhoneNumber), MaxLength(17)]
+    [DataType(DataType.PhoneNumber), MaxLength(15)]
     [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$",
     ErrorMessage = "Please enter a valid New Zealand phone number (e.g., +64 21 234 5678 or 021 234 5678).")]
     public string Phone { get; set; } 

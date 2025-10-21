@@ -21,6 +21,14 @@
                 <button class="btn btn-secondary search-btn" type="submit"><i class="bi bi-search"></i>Search</button>
             </div>
         </form>
+
+        @* Back button appears only when a search has been performed *@
+        @if (!string.IsNullOrEmpty(currentFilter))
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-arrow-left"></i> Back to full list
+            </a>
+        }
         @if (User.IsInRole("Admin"))
         {
             <a asp-action="Create" class="btn btn-create ms-3">Create New Class</a>
