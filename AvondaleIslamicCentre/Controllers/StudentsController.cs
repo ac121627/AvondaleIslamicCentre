@@ -11,32 +11,43 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AvondaleIslamicCentre.Controllers
 {
+    // Only logged-in users can access this controller
     [Authorize]
     public class StudentsController : Controller
     {
         private readonly AICDbContext _context;
-        private const int PageSize = 10;
+        private const int PageSize = 10; // Controls how many students are shown per page
 
+        // Constructor sets up the database context
         public StudentsController(AICDbContext context)
         {
             _context = context;
         }
 
-        // GET: Students
+        // Show a list of all students with sorting, searching, and pagination
         public async Task<IActionResult> Index(string sortOrder, string searchString, int? pageNumber)
         {
+            // Save sorting and search info for the view
             ViewData["CurrentSort"] = sortOrder;
             ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
             ViewData["LastNameSortParm"] = sortOrder == "lastname" ? "lastname_desc" : "lastname";
             ViewData["CurrentFilter"] = searchString;
 
-            var students = _context.Students.Include(s => s.Class).Include(s => s.Teacher).AsQueryable();
+            // Get all students including their class and teacher
+            var students = _context.Students
+                .Include(s => s.Class)
+                .Include(s => s.Teacher)
+                .AsQueryable();
 
+            // Filter by first or last name if a search term is entered
             if (!String.IsNullOrEmpty(searchString))
             {
-                students = students.Where(s => (s.FirstName != null && s.FirstName.Contains(searchString)) || (s.LastName != null && s.LastName.Contains(searchString)));
+                students = students.Where(s =>
+                    (s.FirstName != null && s.FirstName.Contains(searchString)) ||
+                    (s.LastName != null && s.LastName.Contains(searchString)));
             }
 
+            // Sort the results by the chosen field
             students = sortOrder switch
             {
                 "firstname_desc" => students.OrderByDescending(s => s.FirstName),
@@ -45,10 +56,11 @@ namespace AvondaleIslamicCentre.Controllers
                 _ => students.OrderBy(s => s.FirstName),
             };
 
+            // Return the paginated results to the view
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, PageSize));
         }
 
-        // GET: Students/Details/5 
+        // Show details for a specific student
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -56,10 +68,12 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Load student with their class and teacher info
             var student = await _context.Students
                 .Include(s => s.Class)
                 .Include(s => s.Teacher)
                 .FirstOrDefaultAsync(m => m.StudentId == id);
+
             if (student == null)
             {
                 return NotFound();
@@ -68,17 +82,17 @@ namespace AvondaleIslamicCentre.Controllers
             return View(student);
         }
 
-        // GET: Students/Create
+        // Display form to create a new student (Admins only)
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            // Provide dropdown lists for classes and teachers
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName");
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName");
             return View();
         }
 
-        // POST: Students/Create
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Save a new student to the database (Admins only)
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -86,7 +100,7 @@ namespace AvondaleIslamicCentre.Controllers
         {
             if (ModelState.IsValid)
             {
-                // ensure class and teacher exist
+                // Check if the chosen class and teacher exist
                 if (!_context.Class.Any(c => c.ClassId == student.ClassId) || !_context.Teachers.Any(t => t.TeacherId == student.TeacherId))
                 {
                     ModelState.AddModelError(string.Empty, "Selected Class or Teacher does not exist.");
@@ -95,16 +109,19 @@ namespace AvondaleIslamicCentre.Controllers
                     return View(student);
                 }
 
+                // Add the student and save to the database
                 _context.Add(student);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // If validation fails, reload dropdowns and show the form again
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", student.ClassId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", student.TeacherId);
             return View(student);
         }
 
-        // GET: Students/Edit/5
+        // Display form to edit an existing student (Admins only)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -113,19 +130,20 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Find the student by ID
             var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
             }
+
+            // Provide dropdown lists with current selections
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", student.ClassId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", student.TeacherId);
             return View(student);
         }
 
-        // POST: Students/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Save the edited student details (Admins only)
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -140,11 +158,13 @@ namespace AvondaleIslamicCentre.Controllers
             {
                 try
                 {
+                    // Update the student in the database
                     _context.Update(student);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    // Handle case where the student no longer exists
                     if (!StudentExists(student.StudentId))
                     {
                         return NotFound();
@@ -154,14 +174,17 @@ namespace AvondaleIslamicCentre.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
+            // Reload dropdowns if validation fails
             ViewData["ClassId"] = new SelectList(_context.Class, "ClassId", "ClassName", student.ClassId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "TeacherId", "FirstName", student.TeacherId);
             return View(student);
         }
 
-        // GET: Students/Delete/5
+        // Display confirmation page before deleting a student (Admins only)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -170,10 +193,12 @@ namespace AvondaleIslamicCentre.Controllers
                 return NotFound();
             }
 
+            // Load student info along with their class and teacher
             var student = await _context.Students
                 .Include(s => s.Class)
                 .Include(s => s.Teacher)
                 .FirstOrDefaultAsync(m => m.StudentId == id);
+
             if (student == null)
             {
                 return NotFound();
@@ -182,12 +207,13 @@ namespace AvondaleIslamicCentre.Controllers
             return View(student);
         }
 
-        // POST: Students/Delete/5
+        // Permanently delete a student after confirmation (Admins only)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Find and remove the student if found
             var student = await _context.Students.FindAsync(id);
             if (student != null)
             {
@@ -198,6 +224,7 @@ namespace AvondaleIslamicCentre.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Check if a student exists in the database by their ID
         private bool StudentExists(int id)
         {
             return _context.Students.Any(e => e.StudentId == id);

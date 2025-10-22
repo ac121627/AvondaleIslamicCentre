@@ -7,21 +7,27 @@
     var currentFilter = (string)ViewData["CurrentFilter"] ?? "";
 }
 
+<!-- Page header section with title and search/action buttons -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
+        <!-- Main page title and subtitle -->
         <h1 class="page-title">Halls</h1>
         <small class="page-subtitle">Available spaces and capacities</small>
     </div>
     <div class="d-flex align-items-center">
+        <!-- Search form for filtering halls -->
         <form method="get" class="search-wrapper mb-0">
             <div class="input-group search-input">
+                <!-- Search input field with current filter value -->
                 <input type="text" name="searchString" value="@currentFilter" placeholder="Search halls..." class="form-control" />
+                <!-- Hidden field to preserve current sort order during search -->
                 <input type="hidden" name="sortOrder" value="@currentSort" />
+                <!-- Search submit button -->
                 <button class="btn btn-secondary search-btn" type="submit"><i class="bi bi-search"></i>Search</button>
             </div>
         </form>
 
-        @* Back button appears only when a search has been performed *@
+        <!-- Back button - only shown when a search filter is active -->
         @if (!string.IsNullOrEmpty(currentFilter))
         {
             <a asp-action="Index" class="btn btn-outline-secondary ms-2">
@@ -29,19 +35,24 @@
             </a>
         }
 
+        <!-- Create New Hall button - only shown to Admin users -->
         @if (User.IsInRole("Admin"))
         {
             <a asp-action="Create" class="btn btn-create ms-3">Create New Hall</a>
         }
     </div>
 </div>
+
+<!-- Sort options section -->
 <div class="d-flex align-items-center mb-2 gap-3">
     <div class="fw-semibold text-success">Sort:</div>
+    <!-- Sort by Name button -->
     <div>
         <a asp-action="Index" asp-route-sortOrder="@(ViewData["NameSortParm"])" asp-route-searchString="@currentFilter" class="btn btn-sm btn-outline-secondary">
             <i class="bi bi-arrow-down-up"></i> Name
         </a>
     </div>
+    <!-- Sort by Capacity button -->
     <div>
         <a asp-action="Index" asp-route-sortOrder="@(ViewData["CapacitySortParm"])" asp-route-searchString="@currentFilter" class="btn btn-sm btn-outline-secondary">
             <i class="bi bi-arrow-down-up"></i> Capacity
@@ -49,23 +60,32 @@
     </div>
 </div>
 
+<!-- Halls listing section -->
 <div class="row g-3">
+    <!-- Check if there are any halls to display -->
     @if (!Model.Any())
     {
+        <!-- Show message when no halls are found -->
         <div class="col-12">
             <div class="alert alert-light">No halls found.</div>
         </div>
     }
     else
     {
+        <!-- Loop through each hall in the model -->
         foreach (var item in Model)
         {
+            <!-- Each hall card occupies different column sizes on different screen sizes -->
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card shadow-sm mb-2">
                     <div class="card-body">
+                        <!-- Hall name as card title -->
                         <h5 class="card-title text-success">@Html.DisplayFor(m => item.Name)</h5>
+                        <!-- Hall capacity information -->
                         <p class="card-text small-muted mb-2">Capacity: <strong>@Html.DisplayFor(m => item.Capacity)</strong></p>
+                        <!-- Action buttons for each hall -->
                         <div class="d-flex justify-content-end">
+                            <!-- Show full CRUD actions for Admin users -->
                             @if (User.IsInRole("Admin"))
                             {
                                 <a asp-action="Edit" asp-route-id="@item.HallId" class="btn btn-edit btn-sm">Edit</a>
@@ -74,6 +94,7 @@
                             }
                             else
                             {
+                                <!-- Show only Details button for non-Admin users -->
                                 <a asp-action="Details" asp-route-id="@item.HallId" class="btn btn-details btn-sm">Details</a>
                             }
                         </div>
@@ -84,19 +105,26 @@
     }
 </div>
 
+<!-- Pagination controls for navigating through multiple pages of results -->
 <nav aria-label="Page navigation">
     <ul class="pagination">
+        <!-- Previous page button - disabled if on first page -->
         <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
             <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)"
                asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Previous</a>
         </li>
+
+        <!-- Page number buttons - loop through all available pages -->
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
+            <!-- Highlight the current active page -->
             <li class="page-item @(i == Model.PageIndex ? "active" : "")">
                 <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
                    asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">@i</a>
             </li>
         }
+
+        <!-- Next page button - disabled if on last page -->
         <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
             <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)"
                asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Next</a>

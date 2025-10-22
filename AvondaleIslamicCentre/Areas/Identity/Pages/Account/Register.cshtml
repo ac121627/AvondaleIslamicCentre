@@ -1,77 +1,99 @@
 ﻿@page
 @model RegisterModel
 @{
+    // Sets the page title for display in the browser tab or layout
     ViewData["Title"] = "Register";
 }
 
+<!-- Main container for the registration page -->
 <div class="auth-card">
+    <!-- Left side: welcome message and sign-in prompt -->
     <div class="auth-left">
         <h2>Welcome to Avondale Islamic Centre</h2>
         <p>Join our community to manage bookings, donations and more. Secure and easy registration.</p>
+
+        <!-- Section for users who already have an account -->
         <div>
             <p class="small-muted">Already have an account?</p>
+            <!-- Link to the Login page -->
             <a asp-page="/Account/Login" class="btn btn-outline-light">Sign in</a>
         </div>
     </div>
 
+    <!-- Right side: registration form -->
     <div class="auth-right">
         <h3 class="mb-3">Create a new account</h3>
+
+        <!-- Registration form begins -->
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <!-- Displays any validation errors that are not field-specific -->
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
+            <!-- Two-column layout for first and last name -->
             <div class="row g-2">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
+                        <!-- Input for first name -->
                         <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" placeholder="First Name" />
                         <label asp-for="Input.FirstName">First name</label>
+                        <!-- Validation message for first name -->
                         <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
+                        <!-- Input for last name -->
                         <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" placeholder="Last Name" />
                         <label asp-for="Input.LastName">Last name</label>
+                        <!-- Validation message for last name -->
                         <span asp-validation-for="Input.LastName" class="text-danger"></span>
                     </div>
                 </div>
             </div>
 
+            <!-- Input for phone number -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.Phone" class="form-control" autocomplete="tel" placeholder="Phone" />
                 <label asp-for="Input.Phone">Phone</label>
                 <span asp-validation-for="Input.Phone" class="text-danger"></span>
             </div>
 
+            <!-- Input for email -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email address</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
+            <!-- Input for password -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" placeholder="Password" />
                 <label asp-for="Input.Password">Password</label>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
+            <!-- Input for confirm password -->
             <div class="form-floating mb-3">
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" placeholder="Confirm Password" />
                 <label asp-for="Input.ConfirmPassword">Confirm password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
+            <!-- Submit button for registration -->
             <button id="registerSubmit" type="submit" class="w-100 btn btn-primary mb-2">Create account</button>
 
+            <!-- Footer text with privacy policy link -->
             <div class="auth-footer">
                 By creating an account you agree to our <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a>.
             </div>
         </form>
 
         <hr />
-
     </div>
 </div>
 
+<!-- Includes client-side validation scripts -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

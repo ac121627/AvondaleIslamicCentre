@@ -1,24 +1,31 @@
 ﻿@model AvondaleIslamicCentre.Models.Teacher
 
 @{
+    // Set page title
     ViewData["Title"] = "Details";
 }
 
+<!-- Card showing detailed teacher information -->
 <div class="detail-card animate-up">
     <div class="detail-header">
         <h3>Teacher Details</h3>
     </div>
+
     <div class="detail-body">
+        <!-- Display teacher data in label-value format -->
         <div class="detail-row"><div class="detail-key">First Name</div><div class="detail-val">@Html.DisplayFor(m => m.FirstName)</div></div>
         <div class="detail-row"><div class="detail-key">Last Name</div><div class="detail-val">@Html.DisplayFor(m => m.LastName)</div></div>
         <div class="detail-row"><div class="detail-key">Email</div><div class="detail-val">@Html.DisplayFor(m => m.Email)</div></div>
         <div class="detail-row"><div class="detail-key">Phone</div><div class="detail-val">@Html.DisplayFor(m => m.PhoneNumber)</div></div>
 
+        <!-- Buttons at the bottom -->
         <div class="mt-3 text-end">
+            <!-- Only admins can see the Edit button -->
             @if (User.IsInRole("Admin"))
             {
                 <a asp-action="Edit" asp-route-id="@Model?.TeacherId" class="btn btn-edit" data-icon="bi-pencil">Edit</a>
             }
+            <!-- Back to teacher list -->
             <a asp-action="Index" class="btn btn-secondary ms-2" data-icon="bi-arrow-left">Back to List</a>
         </div>
     </div>

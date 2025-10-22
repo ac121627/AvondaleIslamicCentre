@@ -1,23 +1,31 @@
 ﻿@model AvondaleIslamicCentre.Models.Teacher
 
 @{
+    // Set page title
     ViewData["Title"] = "Delete";
 }
 
+<!-- Card displaying teacher info before confirming delete -->
 <div class="detail-card animate-up">
     <div class="detail-header">
         <h3>Delete Teacher</h3>
         <p class="small">Are you sure you want to delete this?</p>
     </div>
+
     <div class="detail-body">
+        <!-- Display teacher information for confirmation -->
         <div class="detail-row"><div class="detail-key">First Name</div><div class="detail-val">@Html.DisplayFor(m => m.FirstName)</div></div>
         <div class="detail-row"><div class="detail-key">Last Name</div><div class="detail-val">@Html.DisplayFor(m => m.LastName)</div></div>
         <div class="detail-row"><div class="detail-key">Email</div><div class="detail-val">@Html.DisplayFor(m => m.Email)</div></div>
         <div class="detail-row"><div class="detail-key">Phone</div><div class="detail-val">@Html.DisplayFor(m => m.PhoneNumber)</div></div>
 
+        <!-- Delete confirmation form -->
         <form asp-action="Delete" class="mt-3 text-end">
+            <!-- Hidden field stores the teacher ID -->
             <input type="hidden" asp-for="TeacherId" />
+            <!-- Submit button deletes the teacher -->
             <button type="submit" class="btn btn-delete" data-icon="bi-trash">Delete</button>
+            <!-- Link to return to the teacher list -->
             <a asp-action="Index" class="btn btn-secondary ms-2" data-icon="bi-arrow-left">Back to List</a>
         </form>
     </div>

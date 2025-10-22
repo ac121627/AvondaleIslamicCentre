@@ -1,9 +1,11 @@
 @model IEnumerable<string>
 @{
+    <!-- Set the page title for the browser tab -->
     ViewData["Title"] = "Gallery";
 }
 
 <div class="container mt-4 animate-up">
+    <!-- Page header section with title and subtitle -->
     <div class="row mb-3">
         <div class="col-12">
             <h1 class="page-title">Gallery</h1>
@@ -11,18 +13,25 @@
         </div>
     </div>
 
+    <!-- Check if there are any images to display -->
     @if (!Model.Any())
     {
+        <!-- Show message when no images are found -->
         <div class="alert alert-light">No images found in the Images folder.</div>
     }
     else
     {
+        <!-- Grid layout for gallery images -->
         <div class="row g-3">
+            <!-- Loop through each image in the model -->
             @foreach (var img in Model)
             {
+                <!-- Each image occupies different column sizes on different screen sizes -->
                 <div class="col-6 col-md-4 col-lg-3">
+                    <!-- Card container for each gallery image -->
                     <div class="card border-0 shadow-sm gallery-card">
                         <a href="@img" data-bs-toggle="modal" data-bs-target="#galleryModal" data-bs-img="@img">
+                            <!-- Gallery image with fixed height and cover cropping -->
                             <img src="@img" class="card-img-top img-fluid rounded" alt="Gallery image" style="height:180px; object-fit:cover;" />
                         </a>
                     </div>

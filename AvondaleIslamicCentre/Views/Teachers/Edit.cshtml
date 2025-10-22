@@ -1,28 +1,41 @@
 ﻿@model AvondaleIslamicCentre.Models.Teacher
 
 @{
+    // Set the page title for the browser tab and header
     ViewData["Title"] = "Edit Teacher";
 }
 
+<!-- Main container with margin and animation for smooth appearance -->
 <div class="container mt-4 animate-up">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
+            <!-- Card to visually group the edit form -->
             <div class="card shadow-sm border-0">
+                <!-- Card header with centered title -->
                 <div class="card-header text-center py-3">
                     <h4 class="mb-0 text-white">Edit Teacher</h4>
                 </div>
+
+                <!-- Card body containing the edit form -->
                 <div class="card-body p-4">
+                    <!-- Form that submits data to the Edit action in the controller -->
                     <form asp-action="Edit">
+                        <!-- Displays validation errors if the model fails validation -->
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
+                        <!-- Hidden field for the TeacherId to keep track of which record is being edited -->
                         <input type="hidden" asp-for="TeacherId" />
 
+                        <!-- Two-column row for first and last name input fields -->
                         <div class="row g-2">
+                            <!-- First Name input field -->
                             <div class="col-md-6">
                                 <label asp-for="FirstName" class="form-label fw-bold"></label>
                                 <input asp-for="FirstName" class="form-control rounded-pill" />
                                 <span asp-validation-for="FirstName" class="text-danger"></span>
                             </div>
+
+                            <!-- Last Name input field -->
                             <div class="col-md-6">
                                 <label asp-for="LastName" class="form-label fw-bold"></label>
                                 <input asp-for="LastName" class="form-control rounded-pill" />
@@ -30,18 +43,21 @@
                             </div>
                         </div>
 
+                        <!-- Email input field -->
                         <div class="mb-3 mt-3">
                             <label asp-for="Email" class="form-label fw-bold"></label>
                             <input asp-for="Email" class="form-control rounded-pill" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
+                        <!-- Phone number input field -->
                         <div class="mb-3">
                             <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
                             <input asp-for="PhoneNumber" class="form-control rounded-pill" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
+                        <!-- Buttons for submitting the form or returning to the list -->
                         <div class="form-group mt-4 text-center">
                             <button type="submit" class="btn btn-edit rounded-pill px-4 py-2">Save Changes</button>
                             <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 ms-2">Back to List</a>
@@ -54,5 +70,8 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <!-- Render validation scripts for client-side form validation -->
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

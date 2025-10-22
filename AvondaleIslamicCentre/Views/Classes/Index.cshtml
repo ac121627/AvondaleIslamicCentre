@@ -2,7 +2,7 @@
 @model PaginatedList<Class>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Classes";
     var currentSort = (string)ViewData["CurrentSort"] ?? "";
     var currentFilter = (string)ViewData["CurrentFilter"] ?? "";
 }
@@ -22,7 +22,7 @@
             </div>
         </form>
 
-        @* Back button appears only when a search has been performed *@
+        <!-- Back button appears only when a search has been performed -->
         @if (!string.IsNullOrEmpty(currentFilter))
         {
             <a asp-action="Index" class="btn btn-outline-secondary ms-2">

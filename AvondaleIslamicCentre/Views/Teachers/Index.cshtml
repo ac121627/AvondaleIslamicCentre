@@ -2,17 +2,20 @@
 @model PaginatedList<Teacher>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Teacher";
     var currentSort = (string)ViewData["CurrentSort"] ?? "";
     var currentFilter = (string)ViewData["CurrentFilter"] ?? "";
 }
 
+<!-- Page header with search and add button -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
         <h1 class="page-title">Teachers</h1>
         <small class="page-subtitle">Your teaching staff</small>
     </div>
+
     <div class="d-flex align-items-center">
+        <!-- Search form -->
         <form method="get" class="search-wrapper mb-0">
             <div class="input-group search-input">
                 <input type="text" name="searchString" value="@currentFilter" placeholder="Search teachers..." class="form-control" />
@@ -21,7 +24,7 @@
             </div>
         </form>
 
-        @* Back button appears only when a search has been performed *@
+        <!-- Back button appears only after a search -->
         @if (!string.IsNullOrEmpty(currentFilter))
         {
             <a asp-action="Index" class="btn btn-outline-secondary ms-2">
@@ -29,6 +32,7 @@
             </a>
         }
 
+        <!-- Only admins can add new teachers -->
         @if (User.IsInRole("Admin"))
         {
             <a asp-action="Create" class="btn btn-create ms-3">Add A New Teacher</a>
@@ -36,6 +40,7 @@
     </div>
 </div>
 
+<!-- Sorting options -->
 <div class="d-flex align-items-center mb-2 gap-3">
     <div class="fw-semibold text-success">Sort:</div>
     <div>
@@ -50,83 +55,84 @@
     </div>
 </div>
 
+<!-- Display list of teachers if any exist -->
 @if (Model.Count > 0)
 {
     <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model[0].FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].PhoneNumber)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <a asp-action="Edit" asp-route-id="@item.TeacherId" class="btn btn-edit btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm ms-1">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.TeacherId" class="btn btn-delete btn-sm ms-1">Delete</a>
-                }
-                else
-                {
-                    <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm">Details</a>
-                }
-            </td>
-        </tr>
-}
-    </tbody>
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model[0].FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model[0].LastName)</th>
+                <th>@Html.DisplayNameFor(model => model[0].Email)</th>
+                <th>@Html.DisplayNameFor(model => model[0].PhoneNumber)</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <!-- Loop through each teacher in the model -->
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                    <td>
+                        <!-- Admins can edit, view, and delete -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.TeacherId" class="btn btn-edit btn-sm">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm ms-1">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.TeacherId" class="btn btn-delete btn-sm ms-1">Delete</a>
+                        }
+                        else
+                        {
+                            <!-- Non-admins can only view details -->
+                            <a asp-action="Details" asp-route-id="@item.TeacherId" class="btn btn-details btn-sm">Details</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 
+    <!-- Pagination controls -->
     <nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Previous</a>
-        </li>
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">@i</a>
+        <ul class="pagination">
+            <!-- Previous page button -->
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Previous</a>
             </li>
-        }
-        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Next</a>
-        </li>
+
+            <!-- Page number buttons -->
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">@i</a>
+                </li>
+            }
+
+            <!-- Next page button -->
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-sortOrder="@currentSort" asp-route-searchString="@currentFilter">Next</a>
+            </li>
         </ul>
     </nav>
 }
 else
 {
+    <!-- No results found messages -->
     if (!String.IsNullOrEmpty(currentFilter))
     {
-        <div class="alert alert-warning"><i class="bi bi-search me-2"></i>We couldn’t find anything matching your search. Try using different words or check your spelling.</div>
+        <div class="alert alert-warning">
+            <i class="bi bi-search me-2"></i>We couldn’t find anything matching your search. Try using different words or check your spelling.
+        </div>
     }
     else
     {
-        <div class="alert alert-light"><i class="bi bi-info-circle me-2"></i>No teachers found.</div>
+        <div class="alert alert-light">
+            <i class="bi bi-info-circle me-2"></i>No teachers found.
+        </div>
     }
 }

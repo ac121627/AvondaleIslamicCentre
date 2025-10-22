@@ -1,20 +1,29 @@
 ﻿@model AvondaleIslamicCentre.Models.Teacher
 
 @{
+    // Set the title for the browser tab and layout
     ViewData["Title"] = "Create Teacher";
 }
 
+<!-- Page container with centered form -->
 <div class="container mt-4 animate-up">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
+            <!-- Card for the form -->
             <div class="card shadow-sm border-0">
+                <!-- Header section with title -->
                 <div class="card-header text-center py-3">
                     <h4 class="mb-0 text-white">Create Teacher</h4>
                 </div>
+
+                <!-- Card body containing the form -->
                 <div class="card-body p-4">
+                    <!-- Form sends data to the Create action in TeacherController -->
                     <form asp-action="Create">
+                        <!-- Validation summary for any model errors -->
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
+                        <!-- First and last name inputs -->
                         <div class="row g-2">
                             <div class="col-md-6">
                                 <label asp-for="FirstName" class="form-label fw-bold"></label>
@@ -28,20 +37,25 @@
                             </div>
                         </div>
 
+                        <!-- Email input -->
                         <div class="mb-3 mt-3">
                             <label asp-for="Email" class="form-label fw-bold"></label>
                             <input asp-for="Email" class="form-control rounded-pill" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
+                        <!-- Phone number input -->
                         <div class="mb-3">
                             <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
                             <input asp-for="PhoneNumber" class="form-control rounded-pill" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
 
+                        <!-- Form buttons -->
                         <div class="form-group mt-4 text-center">
+                            <!-- Submit button to create a new teacher -->
                             <button type="submit" class="btn btn-create rounded-pill px-4 py-2">Create</button>
+                            <!-- Link to return to the list page -->
                             <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 ms-2">Back to List</a>
                         </div>
                     </form>
@@ -51,6 +65,9 @@
     </div>
 </div>
 
+<!-- Includes built-in validation scripts -->
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

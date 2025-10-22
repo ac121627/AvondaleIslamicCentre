@@ -1,42 +1,50 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<!-- Hero Section -->
+<!-- Hero Section: Main banner with welcome message and call-to-action buttons -->
 <section class="text-center text-white py-5" style="background: linear-gradient(135deg, #2d7034, #3BFF48);">
+    <!-- Main Arabic greeting with custom font -->
     <h1 class="display-4 fw-bold text-white" style="font-family: 'Scheherazade New' ">
         السلام عليكم ورحمة الله وبركاته
     </h1>
     <br />
+    <!-- English translation of the Arabic greeting -->
     <p class="fst-italic text-white mb-4">May Peace And Blessings Be Upon You And The Mercy of Allah.</p>
 
+    <!-- Welcome message and introduction to the Islamic Centre -->
     <p class="lead mx-auto" style="max-width: 700px;">
         Welcome to <strong>Avondale Islamic Centre</strong>, a place for prayer, learning, and community connection.
         Join us as we grow together through faith, knowledge, and unity.
     </p>
 
-    <!-- <a href="/Bookings" class="btn btn-light rounded-pill px-4 mt-3">Book a Hall</a> -->
+    <!-- Call-to-action buttons for main functionalities -->
     <a href="/Bookings" class="btn btn-outline-light rounded-pill px-4 mt-3 ms-2">Book a Hall</a>
-
     <a href="/Donations" class="btn btn-outline-light rounded-pill px-4 mt-3 ms-2">Donate</a>
 </section>
 
 <hr />
-<!-- Prayer Times Widget-->
+
+<!-- Prayer Times Widget: Embedded prayer times from external service --> 
 <div>
     <h2 class="card-title text-success fw-bold mb-3 text-center">🕌 Prayer Times</h2>
+    <!-- Script to load the MasjidBox prayer times widget -->
     <script type="text/javascript">(function(w){function async_load(){var s=w.document.createElement('script');s.type='text/javascript';s.async=true;s.defer=true;s.src='https://masjidbox.com/widgets/loader.js';var x=w.document.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);} if(w.attachEvent)w.attachEvent('onload',async_load);else w.addEventListener('load',async_load,false);})(window);</script>
 
+    <!-- Link to display today's prayer times using MasjidBox service -->
     <a data-masjidbox-widget="7XX2-MCoXTuyHZu9N650t" data-masjidbox-ifr href="https://masjidbox.com/prayer-times/avondale-islamic-centre">View Today's Prayer Times</a>
 </div>
 
-<!-- Image Carousel -->
+<!-- Image Carousel: Display various images of the mosque and facilities -->
 <section class="container mb-5">
+    <!-- Bootstrap carousel for image slideshow -->
     <div id="mosqueCarousel" class="carousel slide rounded shadow" data-bs-ride="carousel">
         <div class="carousel-inner">
+            <!-- First image is active by default -->
             <div class="carousel-item active">
                 <img src="~/Images/Entrance 1.jpg" class="d-block w-100 rounded" alt="Mosque Entrance">
             </div>
+            <!-- Multiple carousel items showing different areas of the mosque -->
             <div class="carousel-item">
                 <img src="~/Images/Mens Main 10.jpg" class="d-block w-100 rounded" alt="Main Prayer Hall">
             </div>
@@ -80,6 +88,7 @@
                 <img src="~/Images/Ladies Back.jpg" class="d-block w-100 rounded" alt="Community Gathering">
             </div>
         </div>
+        <!-- Carousel navigation controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#mosqueCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
@@ -91,7 +100,7 @@
     </div>
 </section>
 
-<!-- Mission Section -->
+<!-- Mission Section: Explains the purpose and goals of the Islamic Centre -->
 <section class="text-center py-5 px-3" style="background-color: #F3FFF0;">
     <h2 class="text-success mb-3">Our Mission</h2>
     <p class="text-dark mx-auto" style="max-width: 800px;">
@@ -101,10 +110,11 @@
     </p>
 </section>
 
-<!-- Community Section -->
+<!-- Community Section: Highlights key people and activities in the community -->
 <section class="container text-center py-5">
     <h2 class="text-success mb-4">Meet Our Community</h2>
     <div class="row g-4">
+        <!-- Imam profile card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <img src="~/Images/Sheikh Shaakir.jpg" class="card-img-top rounded-top" alt="Imam">
@@ -115,6 +125,7 @@
                 </div>
             </div>
         </div>
+        <!-- Education and classes card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <img src="~/Images/Class.jpg" class="card-img-top rounded-top" alt="Classes">
@@ -124,6 +135,7 @@
                 </div>
             </div>
         </div>
+        <!-- Community events card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <img src="~/Images/Community.jpg" class="card-img-top rounded-top" alt="Community">
@@ -136,10 +148,11 @@
     </div>
 </section>
 
-<!-- Quick Links Section -->
+<!-- Quick Links Section: Provides easy access to important site features -->
 <section class="container py-5">
     <h2 class="text-center text-success mb-5">Quick Access</h2>
     <div class="row text-center g-4">
+        <!-- Prayer timetables card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -150,6 +163,7 @@
                 </div>
             </div>
         </div>
+        <!-- Hall booking card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -160,6 +174,7 @@
                 </div>
             </div>
         </div>
+        <!-- Donations card -->
         <div class="col-md-4">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
