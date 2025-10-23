@@ -96,6 +96,14 @@
             }
         </tbody>
     </table>
+    @if (User.IsInRole("Member"))
+    {
+        <div class="alert alert-success mt-3 shadow-sm" style="border-left: 4px solid #2d7034;">
+            <i class="bi bi-info-circle-fill me-2 text-success"></i>
+            If you want to register your child for the <strong>Madrasah classes</strong>, please get in touch with an administrator via the
+            <a asp-controller="Home" asp-action="About" class="fw-semibold text-success text-decoration-none">About</a> page.
+        </div>
+    }
 
     <!-- Pagination controls -->
     <nav aria-label="Page navigation">

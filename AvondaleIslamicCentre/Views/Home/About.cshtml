@@ -1,4 +1,4 @@
-@{
+﻿@{
     ViewData["Title"] = "About";
 }
 
@@ -7,57 +7,39 @@
     <div class="row g-4">
         <!-- Left column: Main about content -->
         <div class="col-lg-7">
-            <!-- Page header with title and subtitle -->
             <h1 class="page-title">About Avondale Islamic Centre</h1>
             <p class="page-subtitle">Serving the spiritual and educational needs of the Avondale community</p>
 
-            <!-- Introduction paragraph about the Islamic Centre -->
             <p class="lead mt-3">
                 Avondale Islamic Centre is a community mosque providing a welcoming space for worship, learning and social activities.
                 We run daily prayers, Friday Jumu'ah, Quran classes, youth programs, and community outreach.
             </p>
 
-            <!-- Spacing for visual separation -->
-            <br />
-            <br />
-            <br />
             <br />
 
-            <!-- Services and offerings section -->
+            <!-- Services -->
             <div>
-                <h4>What we offer</h4>
-                <!-- Bulleted list of services provided -->
+                <h4>Our Core Services</h4>
                 <ul>
-                    <li>Regular daily and Friday prayers</li>
-                    <li>Religious education and Quran classes for all ages</li>
-                    <li>Community events and social programs</li>
-                    <li>Venue hire for approved religious and community activities</li>
+                    <li><strong>Madrasah Classes:</strong> Islamic and Quranic education for children and youth throughout the week.</li>
+                    <li><strong>Janāzah (Funeral) Services:</strong> Support and assistance for the community during times of loss.</li>
+                    <li><strong>Tafsir Programs:</strong> Weekly Quran Tafsir sessions and lectures to deepen understanding of the Deen.</li>
+                    <li><strong>Religious Programs:</strong> Periodic gatherings, seminars, and events for spiritual and social growth.</li>
+                    <li><strong>Community Engagement:</strong> Youth activities, family programs, and Dawah initiatives for all ages.</li>
                 </ul>
             </div>
-
-            <!-- Call to action with links to other pages -->
-            <p class="mt-3">
-                We welcome everyone to visit and learn more about our services.
-                For the latest events and updates, check our
-                <!-- Link to Notices page -->
-                <a asp-controller="Notices" asp-action="Index">Notices</a> page
-                or browse our <!-- Link to Gallery page --><a asp-action="Gallery">Gallery</a>.
-            </p>
         </div>
 
-        <!-- Right column: Sidebar card with logo and quick links -->
+        <!-- Right column: Sidebar card -->
         <div class="col-lg-5">
             <div class="card border-0 shadow-sm">
-                <!-- Centre logo image -->
                 <img src="~/Images/AIC logo.png" class="card-img-top p-4 bg-light" alt="Avondale Islamic Centre" />
                 <div class="card-body">
                     <h5 class="card-title">Visit Us</h5>
-                    <!-- Information about visiting the centre -->
                     <p class="card-text small-muted">
                         Location and community contact information can be found on our Contact page.
                         We encourage visitors and prospective members to attend a service or event.
                     </p>
-                    <!-- Action buttons for navigation -->
                     <a asp-controller="Notices" asp-action="Index" class="btn btn-create ms-3">Latest Notices</a>
                     <a asp-action="Gallery" class="btn btn-outline-secondary ms-2">View Gallery</a>
                 </div>
@@ -65,31 +47,70 @@
         </div>
     </div>
 
-    <!-- Contact Us Section: Centered contact information -->
-    <div class="contact-section text-center mt-5 p-4 rounded shadow-sm">
-        <h3 class="text-success fw-bold mb-3">Contact Us</h3>
-        <p class="mb-2 text-muted">Have any questions or need assistance?</p>
-        <!-- Email contact information with icon -->
-        <p>
-            <i class="bi bi-envelope-fill text-success me-2"></i>
-            <a href="mailto:ac121627@avcol.school.nz" class="text-decoration-none text-success fw-semibold">
-                ac121627@avcol.school.nz
-            </a>
+    <!-- Indemnity Notice -->
+    <div class="mt-5 p-3 border-start border-3 border-warning bg-light rounded">
+        <h4 class="text-warning">Indemnity Notice</h4>
+        <p class="mb-0">
+            Avondale Islamic Centre takes the safety of all visitors seriously. However, the mosque and its management are
+            not responsible or liable for any accidents, injuries, damages, or loss involving individuals or vehicles while
+            on the premises. Visitors and attendees are expected to take appropriate care and responsibility for their own
+            safety and belongings.
         </p>
+    </div>
+
+    <!-- Contact + Ask Imam Section -->
+    <div class="row justify-content-center mt-5 g-4">
+        <!-- Contact Us -->
+        <div class="col-md-6">
+            <div class="contact-section text-center p-4 rounded shadow-sm h-100">
+                <h3 class="text-success fw-bold mb-3">Contact Us</h3>
+                <p class="mb-2 text-muted">Have any questions or need assistance?</p>
+                <p>
+                    <i class="bi bi-envelope-fill text-success me-2"></i>
+                    <a href="mailto:ac121627@avcol.school.nz" class="text-decoration-none text-success fw-semibold">
+                        ac121627@avcol.school.nz
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Ask the Imam -->
+        <div class="col-md-6">
+            <div class="contact-section text-center p-4 rounded shadow-sm h-100">
+                <h3 class="text-success fw-bold mb-3">Ask the Imam</h3>
+                <p class="text-muted mb-2">
+                    Have a question about Islamic rulings or religious guidance?<br />
+                    You can contact our Imam directly for advice and clarification.
+                </p>
+                <p>
+                    <i class="bi bi-envelope-paper-fill text-success me-2"></i>
+                    <a href="mailto:imam@aic.com" class="text-decoration-none text-success fw-semibold">
+                        imam@aic.com
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Custom CSS styles for the contact section -->
+<!-- CSS styles -->
 <style>
-    /* Contact section styling with colored left border */
     .contact-section {
         border-left: 4px solid #2d7034;
         max-width: 600px;
         margin: 0 auto;
+        transition: transform 0.2s ease-in-out;
     }
 
-        /* Hover effect for links in contact section */
+        .contact-section:hover {
+            transform: translateY(-3px);
+        }
+
         .contact-section a:hover {
             text-decoration: underline;
         }
+
+    ul li {
+        margin-bottom: 8px;
+    }
 </style>
