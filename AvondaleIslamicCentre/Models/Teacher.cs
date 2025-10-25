@@ -30,7 +30,7 @@ namespace AvondaleIslamicCentre.Models
 
         [Required, Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber), MaxLength(15)]
-        [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$", ErrorMessage = "Please enter a valid New Zealand phone number.")]
+        [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$", ErrorMessage = "Please enter a valid New Zealand phone number (e.g., +64 21 234 5678 or 021 234 5678)2.")]
         public string PhoneNumber { get; set; }  // Teacher's phone number
 
         public ICollection<Class>? Classes { get; set; } = new List<Class>();  // One teacher can have multiple classes

@@ -54,30 +54,35 @@ namespace AvondaleIslamicCentre.Models
 
         [Required, StringLength(25)]
         [Display(Name = "Guardian First Name")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$")]
+        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
         public string GuardianFirstName { get; set; }  // Guardian’s first name
 
         [Required, StringLength(25)]
         [Display(Name = "Guardian Last Name")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$")]
+        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
         public string GuardianLastName { get; set; }  // Guardian’s last name
 
         [Required, StringLength(25)]
         [Display(Name = "Student First Name")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$")]
+        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
         public string FirstName { get; set; }  // Student’s first name
 
         [Required, StringLength(25)]
         [Display(Name = "Student Last Name")]
-        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$")]
+        [RegularExpression(@"^[A-Z][a-zA-Z]*(?:[ '\-][A-Za-z][a-zA-Z]*)*$",
+    ErrorMessage = "Name must start with a capital letter and may only contain letters, spaces, hyphens, or apostrophes.")]
         public string LastName { get; set; }  // Student’s last name
 
         [Required, EmailAddress, StringLength(50)]
         [Display(Name = "Guardian Email")]
         public string Email { get; set; }  // Guardian’s email address
 
-        [Required, StringLength(100, MinimumLength = 5)]
-        [Display(Name = "Address")]
+        [Required, Display(Name = "Address")]
+        [RegularExpression(@"^[a-zA-Z0-9\s,'\-\/\.#]+$", ErrorMessage = "Please enter a valid address.")]
+        [StringLength(100, MinimumLength = 5, ErrorMessage = "Address must be 5–100 characters.")]
         public string Address { get; set; }  // Guardian’s address
 
         [Required, DataType(DataType.Date)]
@@ -111,7 +116,7 @@ namespace AvondaleIslamicCentre.Models
         public Class? Class { get; set; }  // Navigation property
 
         [Display(Name = "Teacher")]
-        public int? TeacherId { get; set; }  // FK to Teacher (nullable)
+        public int? TeacherId { get; set; }  // FK to Teacher 
         public Teacher? Teacher { get; set; }  // Navigation property
     }
 }
