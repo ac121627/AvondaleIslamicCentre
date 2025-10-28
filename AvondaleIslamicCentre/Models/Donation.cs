@@ -38,7 +38,7 @@ namespace AvondaleIslamicCentre.Models
         public DateTime DateDonated { get; set; } = DateTime.Now;  // Date donation was made
 
         [Required]
-        [Display(Name = "Donation Type")]
+        [Display(Name = "Donation For")]
         public DonationType DonationType { get; set; }  // Type of donation (e.g., Zakat)
 
         [Required]

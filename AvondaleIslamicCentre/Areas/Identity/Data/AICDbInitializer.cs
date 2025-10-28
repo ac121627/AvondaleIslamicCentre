@@ -65,7 +65,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     Phone = "+64 21 100 1001"
                 };
 
-                // Create the user with a plain text password (only appropriate for seeding in dev).
+                // Create the user with a plain text password.
                 var res = await userManager.CreateAsync(newAdmin, "Admin@123");
 
                 // If creation failed, write errors to console; otherwise assign the Admin role.
@@ -118,7 +118,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Admin user not available; seeding of user-owned records will use member user or skip.");
             }
 
-            // Seed Halls if none exist.
+            // Seed Halls.
             try
             {
                 // Only seed if the Hall table is empty.
@@ -143,7 +143,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Error seeding Halls: " + ex.Message);
             }
 
-            // Seed Teachers if none exist.
+            // Seed Teachers.
             try
             {
                 if (!context.Teachers.Any())
@@ -168,7 +168,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Error seeding Teachers: " + ex.Message);
             }
 
-            // Seed Classes if table is empty.
+            // Seed Classes.
             try
             {
                 if (!context.Class.Any())
@@ -181,7 +181,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     {
                         var classes = new List<Class>
                         {
-                            new Class { ClassName = "Hifz Class", Description = "Memorization of the Holy Quran", CurrentStudents = 6, TeacherId = teacherIds[0] },
+                            new Class { ClassName = "Hifz Class", Description = "Memorisation of the Holy Quran", CurrentStudents = 6, TeacherId = teacherIds[0] },
                             new Class { ClassName = "Grade 7", Description = "Year / Grade 7.", CurrentStudents = 3, TeacherId = teacherIds[1] },
                             new Class { ClassName = "Grade 6", Description = "Year / Grade 6.", CurrentStudents = 10, TeacherId = teacherIds[2] },
                             new Class { ClassName = "Grade 5", Description = "Year / Grade 5.", CurrentStudents = 15, TeacherId = teacherIds[3] },
@@ -191,7 +191,6 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                         context.Class.AddRange(classes);
                         await context.SaveChangesAsync();
                     }
-                    // If there are fewer teachers, the code silently skips class seeding.
                 }
             }
             catch (Exception ex)
@@ -199,7 +198,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Error seeding Classes: " + ex.Message);
             }
 
-            // Seed Students if none exist.
+            // Seed Students.
             try
             {
                 if (!context.Students.Any())
@@ -212,18 +211,18 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     var guardianNames = new[]
                     {
                         "Abdullah", "Ahmad", "Ali", "Bilal", "Fahad", "Hamza", "Hassan", "Imran", "Ismail", "Ibrahim",
-                         "Junaid", "Khalid", "Mahmood", "Naeem", "Omar", "Qasim", "Rashid", "Suleman", "Tariq", "Yusuf"
+                         "Junaid", "Khalid", "Mahmood", "Naeem", "Omar", "Qasim", "Rashid", "Sulaiman", "Tariq", "Yusuf"
                     };
 
                     var studentFirst = new[]
                     {
-                      "Ayaan", "Amina", "Bilal", "Fatima", "Daniyal", "Hana", "Eesa", "Layla", "Faris", "Maryam", "Hamza", "Noor", "Ilyas", "Safiya", "Omar", "Sumaya", "Rayan", "Yasmin", "Yusuf", "Zara"
+                      "Ayaan", "Amina", "Bilal", "Fatima", "Daniyal", "Hana", "Isa", "Layla", "Faris", "Maryam", "Hamza", "Noor", "Ilyas", "Safiya", "Omar", "Sumaya", "Rayan", "Yasmin", "Yusuf", "Zara"
                     };
 
                     var studentLast = new[]
                     {
                       "Khan", "Malik", "Hussain", "Ahmad", "Sheikh", "Ali", "Farooq", "Qureshi", "Syed", "Raza",
-                      "Naseem", "Ibrahim", "Abbas", "Chowdhury", "Aziz", "Rehman", "Jamal", "Mustafa", "Hassan", "Karim"
+                      "Naseem", "Ibrahim", "Abbas", "Chowdhury", "Aziz", "Rahman", "Jamal", "Mustafa", "Hassan", "Karim"
                     };
 
 
@@ -232,23 +231,20 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     // Loop to create 20 sample students.
                     for (int i = 0; i < 20; i++)
                     {
-                        // Build a pseudo-random but deterministic local phone number using index.
-                        var local = 200 + (i % 700); // keep local part in a sensible range
-                        var subs = 1000 + i;         // subscriber part increments by index
-                        var phone = $"+64 21 {local:D3} {subs:D4}"; // format phone number
+                        // Build a random phone number.
+                        var phone = $"+64 21 062 {1746 + i}"; // format phone number
 
                         // Add a student object with a variety of fields set.
                         students.Add(new Student
                         {
                             GuardianFirstName = guardianNames[i],
-                            GuardianLastName = "Family",
+                            GuardianLastName = studentLast[i],
                             FirstName = studentFirst[i],
                             LastName = studentLast[i],
-                            Email = $"student{i + 1}@example.com",
+                            Email = $"{guardianNames[i]}@example.com",
                             PhoneNumber = phone,
-                            // Alternate gender based on index parity.
+                            // Alternate gender values for every student
                             Gender = (i % 2 == 0) ? Gender.Male : Gender.Female,
-                            // Use modulo to cycle through enum values safely.
                             Ethnicity = (Ethnicity)(i % Enum.GetValues(typeof(Ethnicity)).Length),
                             QuranNazira = (QuranLevel)(i % Enum.GetValues(typeof(QuranLevel)).Length),
                             // Offset the Hifz level by 1 to vary values compared to Nazira.
@@ -262,7 +258,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                         });
                     }
 
-                    // Persist the students to the database.
+                    // Add the students to the database.
                     context.Students.AddRange(students);
                     await context.SaveChangesAsync();
                 }
@@ -272,14 +268,13 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Error seeding Students: " + ex.Message);
             }
 
-            // Seed Notices if none exist.
+            // Seed Notices.
             try
             {
                 if (!context.Notices.Any())
                 {
-                    // Choose a user id to associate with posted notices.
-                    // Prefer the admin user id, otherwise fall back to member user id, otherwise empty string.
-                    var userIdForNotices = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    // admin user id to associate with posted notices.
+                    var userIdForNotices = adminUser?.Id;
 
                     // Create 20 notices with decreasing posted dates.
                     var notices = Enumerable.Range(1, 20).Select(i => new Notice
@@ -304,8 +299,8 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
             {
                 if (!context.Donations.Any())
                 {
-                    // Choose a user id to associate with donations (admin preferred).
-                    var userIdForDonations = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    // Choose a user id to associate with donations
+                    var userIdForDonations = adminUser?.Id;
 
                     // Create 20 donation records with different enums and timestamps.
                     var donations = Enumerable.Range(1, 20).Select(i => new Donation
@@ -328,7 +323,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 Console.WriteLine("Error seeding Donations: " + ex.Message);
             }
 
-            // Seed Bookings if none exist.
+            // Seed Bookings.
             try
             {
                 if (!context.Booking.Any())
@@ -337,7 +332,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     var hallIds = context.Hall.Select(h => h.HallId).ToList();
 
                     // Choose a user id to associate with bookings.
-                    var userIdForBookings = adminUser?.Id ?? memberUser?.Id ?? string.Empty;
+                    var userIdForBookings = adminUser?.Id;
 
                     var bookings = new List<Booking>();
 
@@ -363,7 +358,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                         });
                     }
 
-                    // Persist the bookings to the database.
+                    // Add the bookings to the database.
                     context.Booking.AddRange(bookings);
                     await context.SaveChangesAsync();
                 }

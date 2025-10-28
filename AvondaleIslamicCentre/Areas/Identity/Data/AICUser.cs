@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace AvondaleIslamicCentre.Areas.Identity.Data;
 
-// Add profile data for application users by adding properties to the AICUser class
 public class AICUser : IdentityUser
 {
     [Required(ErrorMessage = "Please provide a valid First Name.")]
