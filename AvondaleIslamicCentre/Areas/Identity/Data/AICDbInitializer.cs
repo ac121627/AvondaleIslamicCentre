@@ -60,7 +60,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     UserName = adminEmail,
                     Email = adminEmail,
                     EmailConfirmed = true,
-                    FirstName = "Site",
+                    FirstName = "Admin",
                     LastName = "Admin",
                     Phone = "+64 21 100 1001"
                 };
@@ -91,7 +91,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     UserName = memberEmail,
                     Email = memberEmail,
                     EmailConfirmed = true,
-                    FirstName = "Regular",
+                    FirstName = "Member",
                     LastName = "Member",
                     Phone = "+64 21 100 1002"
                 };
@@ -150,12 +150,12 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                 {
                     var teachers = new List<Teacher>
                     {
-                        new Teacher { FirstName = "Aisha", LastName = "Khan", Email = "aisha.khan@aic.nz", PhoneNumber = "+64 21 111 0001" },
-                        new Teacher { FirstName = "David", LastName = "Ng", Email = "david.ng@aic.nz", PhoneNumber = "+64 21 111 0002" },
-                        new Teacher { FirstName = "Sana", LastName = "Ali", Email = "sana.ali@aic.nz", PhoneNumber = "+64 21 111 0003" },
-                        new Teacher { FirstName = "Liam", LastName = "Oconnor", Email = "liam.oconnor@aic.nz", PhoneNumber = "+64 21 111 0004" },
-                        new Teacher { FirstName = "Maya", LastName = "Patel", Email = "maya.patel@aic.nz", PhoneNumber = "+64 21 111 0005" },
-                        new Teacher { FirstName = "Noah", LastName = "Brown", Email = "noah.brown@aic.nz", PhoneNumber = "+64 21 111 0006" }
+                        new Teacher { FirstName = "Ahmad", LastName = "Khan", Email = "ahmad.khan@aic.nz", PhoneNumber = "+64 21 111 0001" },
+                        new Teacher { FirstName = "Bilal", LastName = "Rahman", Email = "bilal.rahman@aic.nz", PhoneNumber = "+64 21 111 0002" },
+                        new Teacher { FirstName = "Faisal", LastName = "Malik", Email = "faisal.malik@aic.nz", PhoneNumber = "+64 21 111 0003" },
+                        new Teacher { FirstName = "Hamza", LastName = "Qureshi", Email = "hamza.qureshi@aic.nz", PhoneNumber = "+64 21 111 0004" },
+                        new Teacher { FirstName = "Ibrahim", LastName = "Syed", Email = "ibrahim.syed@aic.nz", PhoneNumber = "+64 21 111 0005" },
+                        new Teacher { FirstName = "Yusuf", LastName = "Ali", Email = "yusuf.ali@aic.nz", PhoneNumber = "+64 21 111 0006" }                    
                     };
 
                     context.Teachers.AddRange(teachers);
@@ -209,9 +209,23 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     var teacherIds = context.Teachers.Select(t => t.TeacherId).ToList();
 
                     // Example seed data arrays for guardians and student names.
-                    var guardianNames = new[] { "Ahmad", "Leila", "Fatima", "Omar", "Hassan", "Sara", "Ibrahim", "Zara", "Hana", "Yusuf", "Amina", "Bilal", "Rania", "Karim", "Mona", "Rashid", "Nadia", "Samir", "Yara", "Zain" };
-                    var studentFirst = new[] { "Adam", "Bella", "Cyrus", "Dina", "Elias", "Farah", "Gabe", "Huda", "Ilan", "Jana", "Kian", "Lina", "MayaS", "Noor", "OmarS", "Pia", "Qasim", "Rima", "Sami", "Tala" };
-                    var studentLast = new[] { "Jones", "Smith", "Lee", "Wong", "Clark", "Evans", "Adams", "Baker", "Carter", "Dawson", "Ellis", "Foster", "Graham", "Hayes", "Ibrahim", "Jensen", "Khan", "Lopez", "Martin", "Nguyen" };
+                    var guardianNames = new[]
+                    {
+                        "Abdullah", "Ahmad", "Ali", "Bilal", "Fahad", "Hamza", "Hassan", "Imran", "Ismail", "Ibrahim",
+                         "Junaid", "Khalid", "Mahmood", "Naeem", "Omar", "Qasim", "Rashid", "Suleman", "Tariq", "Yusuf"
+                    };
+
+                    var studentFirst = new[]
+                    {
+                      "Ayaan", "Amina", "Bilal", "Fatima", "Daniyal", "Hana", "Eesa", "Layla", "Faris", "Maryam", "Hamza", "Noor", "Ilyas", "Safiya", "Omar", "Sumaya", "Rayan", "Yasmin", "Yusuf", "Zara"
+                    };
+
+                    var studentLast = new[]
+                    {
+                      "Khan", "Malik", "Hussain", "Ahmad", "Sheikh", "Ali", "Farooq", "Qureshi", "Syed", "Raza",
+                      "Naseem", "Ibrahim", "Abbas", "Chowdhury", "Aziz", "Rehman", "Jamal", "Mustafa", "Hassan", "Karim"
+                    };
+
 
                     var students = new List<Student>();
 
