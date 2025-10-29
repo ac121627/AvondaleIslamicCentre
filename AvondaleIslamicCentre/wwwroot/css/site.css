@@ -40,7 +40,7 @@ body > .container {
     grid-template-columns: 1fr 420px;
 }
 
-    /* Left section of the auth card (usually a message or branding) */
+    /* Left section of the auth card */
     .auth-card .auth-left {
         padding: 36px;
         background: linear-gradient(135deg, rgba(45,112,52,0.95), rgba(34,91,43,0.95));
@@ -62,7 +62,7 @@ body > .container {
             color: rgba(255,255,255,0.9);
         }
 
-    /* Right side of auth card (typically holds form inputs) */
+    /* Right side of auth card */
     .auth-card .auth-right {
         padding: 32px;
     }
@@ -113,7 +113,7 @@ body > .container {
     border-color: var(--brand-green);
 }
 
-/* Muted text helper class */
+/* Muted text class */
 .small-muted {
     color: var(--muted);
 }

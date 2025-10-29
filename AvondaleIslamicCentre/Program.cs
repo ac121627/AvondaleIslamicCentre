@@ -29,12 +29,10 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        // Log or ignore in dev
         Console.WriteLine($"Database seeding error: {ex.Message}");
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
