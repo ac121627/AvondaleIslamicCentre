@@ -78,20 +78,20 @@ namespace AvondaleIslamicCentre.Areas.Identity.Pages.Account
             [Required(ErrorMessage = "Please provide a valid Last Name.")]
             [Display(Name = "Last Name")]
             [RegularExpression(@"^[A-Z][a-z\s]*$", ErrorMessage = "Name must begin with a capital letter and must not include special characters or numbers.")]
-            [StringLength(50, MinimumLength = 2, ErrorMessage = "Last name must be between 2 and 50 characters.")]
+            [StringLength(25, MinimumLength = 1, ErrorMessage = "Last name must be between 1 and 25 characters.")]
             public string LastName { get; set; }
 
 
             [Required(ErrorMessage = "Please provide a valid First Name.")]
             [Display(Name = "First Name")]
             [RegularExpression(@"^[A-Z][a-z\s]*$", ErrorMessage = "Name must begin with a capital letter and must not include special characters or numbers.")]
-            [StringLength(50, MinimumLength = 2, ErrorMessage = "First name must be between 2 and 50 characters.")]
+            [StringLength(25, MinimumLength = 1, ErrorMessage = "First name must be between 1 and 25 characters.")]
             public string FirstName { get; set; }
 
             [Required(ErrorMessage = "Please provide a valid Phone Number.")]
             [Display(Name = "Phone Number")]
             [DataType(DataType.PhoneNumber)]
-            [StringLength(17, ErrorMessage = "Phone number must be under 17 characters.")]
+            [StringLength(15, ErrorMessage = "Phone number must be under 17 characters.")]
             [RegularExpression(@"^(\+64\s?\d{1,2}\s?\d{3,4}\s?\d{3,4}|0\d{1,2}\s?\d{3,4}\s?\d{3,4})$",
             ErrorMessage = "Please enter a valid New Zealand phone number (e.g., +64 21 234 5678 or 021 234 5678).")]
             public string Phone { get; set; }
@@ -106,7 +106,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Pages.Account
             /// directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }

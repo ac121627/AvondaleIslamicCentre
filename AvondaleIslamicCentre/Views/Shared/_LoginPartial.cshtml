@@ -8,7 +8,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     var appUser = await UserManager.GetUserAsync(User);
-    var displayName = appUser?.FirstName; // use FirstName when available
+    var displayName = appUser?.FirstName; // use FirstName instead of Email address.
     if (string.IsNullOrWhiteSpace(displayName))
     {
         displayName = UserManager.GetUserName(User);
