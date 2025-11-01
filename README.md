@@ -52,13 +52,14 @@ This project is designed to support the Centre’s daily operations — includin
 
 ## 🚀 Getting Started
 
-# 1. Get the project files – download or clone the repository to your local machine.
-# 2. Open in Visual Studio – load the solution and restore any missing packages automatically.
-# 3. Set up the database – use the built-in tools to create and apply the database schema. do "Update-database" within the Nuget Package Manager.
-# 4. Run the app – start the project, open your browser, and enjoy the app locally.
+#### 1. Get the project files – download or clone the repository to your local machine.
+#### 2. Open in Visual Studio – load the solution and restore any missing packages automatically.
+#### 3. Set up the database – use the built-in tools to create and apply the database schema. do "Update-database" within the Nuget Package Manager.
+#### 4. Run the app – start the project, open your browser, and enjoy the app locally.
 
+---
 
-## 👑 Test Accounts
+## ✨ Test Accounts
 
 - **Admin**
   - admin@aic.com -> Admin@123
@@ -66,6 +67,7 @@ This project is designed to support the Centre’s daily operations — includin
 - **Member**
   - member@aic.com -> Member@123
  
+
 
 ```bash
 git clone https://github.com/ac121627/AvondaleIslamicCentre.git
