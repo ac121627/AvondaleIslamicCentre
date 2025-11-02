@@ -30,7 +30,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
             }
             catch (Exception ex)
             {
-                // Log the migration error to console. In production you may want structured logging.
+                // Log the migration error to console.
                 Console.WriteLine($"Migration error: {ex.Message}");
             }
 
@@ -232,7 +232,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
                     for (int i = 0; i < 20; i++)
                     {
                         // Build a random phone number.
-                        var phone = $"+64 21 062 {1746 + i}"; // format phone number
+                        var phone = $"+64 21 062 {1657 + i}"; // format phone number
 
                         // Add a student object with a variety of fields set.
                         students.Add(new Student
@@ -336,7 +336,7 @@ namespace AvondaleIslamicCentre.Areas.Identity.Data
 
                     var bookings = new List<Booking>();
 
-                    // Create 20 booking entries.
+                    // Create 20 bookings.
                     for (int i = 1; i <= 20; i++)
                     {
                         // Compute a start date/time for the booking.
